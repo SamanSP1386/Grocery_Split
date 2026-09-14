@@ -1,0 +1,23 @@
+{
+	"name": "express-backend",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"scripts": {
+		"format": "prettier --write --ignore-unknown .",
+		"lint": "eslint .",
+		"dev": "node --watch src/index.ts",
+		"build": "tsc",
+		"start": "node dist/index.ts"
+	},
+	"devDependencies": {
+		"@eslint/js": "^10.0.1",
+		"@tsconfig/node-ts": "^23.6.4",
+		"@tsconfig/node26": "^26.0.1",
+		"@types/node": "^24.13.4",
+		"eslint": "^10.10.0",
+		"prettier": "3.9.6",
+		"typescript": "~6.0.3",
+		"typescript-eslint": "^8.70.0"
+	}
+}
