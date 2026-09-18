@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prepare": "husky"
+    "prepare": "husky",
+    "pre-commit": "pnpm run --filter \"./packages/**\" pre-commit"
   },
   "keywords": [],
   "author": "",
@@ -21,10 +22,6 @@
     "packages/*"
   ],
   "devDependencies": {
-    "husky": "^9.1.7",
-    "lint-staged": "^17.5.1"
-  },
-  "lint-staged": {
-    "**/*": "pnpm --filter react-frontend run format"
+    "husky": "^9.1.7"
   }
 }
