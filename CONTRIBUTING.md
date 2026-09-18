@@ -18,5 +18,5 @@
 
 ## Commit message format
 
-- <type>: <concise message with impertive mood>
+- `<type>: <concise message with impertive mood>`
   - i.e: "feat: add search filtering options", "fix: fix bug blocking signin on windows devices"
