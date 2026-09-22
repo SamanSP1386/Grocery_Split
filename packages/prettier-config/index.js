@@ -1,4 +1,8 @@
-{
+/**
+ * @see https://prettier.io/docs/configuration
+ * @type {import("prettier").Config}
+ */
+const config = {
 	"trailingComma": "none",
 	"semi": true,
 	"singleQuote": false,
@@ -8,3 +12,5 @@
 	"printWidth": 100,
 	"useTabs": true
 }
+
+export default config;

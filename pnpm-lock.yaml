@@ -270,6 +270,9 @@ importers:
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.10.0)
+      '@grocery-split/prettier-config':
+        specifier: workspace:*
+        version: link:../prettier-config
       '@tsconfig/node-ts':
         specifier: ^23.6.4
         version: 23.6.4
@@ -295,6 +298,12 @@ importers:
         specifier: ^8.70.0
         version: 8.70.0(eslint@10.10.0)(typescript@6.0.3)
 
+  packages/prettier-config:
+    devDependencies:
+      prettier:
+        specifier: 3.9.6
+        version: 3.9.6
+
   packages/react-frontend:
     devDependencies:
       '@babel/core':
@@ -303,6 +312,9 @@ importers:
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.10.0)
+      '@grocery-split/prettier-config':
+        specifier: workspace:*
+        version: link:../prettier-config
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.4(@babel/core@7.29.7)(rolldown@1.2.8)(vite@8.3.0(@types/node@24.13.4)(yaml@2.9.1))

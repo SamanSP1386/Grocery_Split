@@ -14,6 +14,7 @@
 	"devDependencies": {
 		"@babel/core": "^7.29.7",
 		"@eslint/js": "^10.0.1",
+		"@grocery-split/prettier-config": "workspace:*",
 		"@rolldown/plugin-babel": "^0.2.3",
 		"@types/babel__core": "^7.20.5",
 		"@types/node": "^24.13.3",
@@ -38,5 +39,6 @@
 			"pnpm run format",
 			"pnpm run lint"
 		]
-	}
+	},
+	"prettier": "@grocery-split/prettier-config"
 }
