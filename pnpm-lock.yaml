@@ -296,13 +296,6 @@ importers:
         version: 8.70.0(eslint@10.10.0)(typescript@6.0.3)
 
   packages/react-frontend:
-    dependencies:
-      react:
-        specifier: ^19.2.8
-        version: 19.3.0
-      react-dom:
-        specifier: ^19.2.8
-        version: 19.3.0(react@19.3.0)
     devDependencies:
       '@babel/core':
         specifier: ^7.29.7
@@ -349,6 +342,12 @@ importers:
       prettier:
         specifier: 3.9.6
         version: 3.9.6
+      react:
+        specifier: ^19.3.0
+        version: 19.3.0
+      react-dom:
+        specifier: ^19.3.0
+        version: 19.3.0(react@19.3.0)
       typescript:
         specifier: ~6.0.2
         version: 6.0.3
