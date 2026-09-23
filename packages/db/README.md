@@ -16,6 +16,24 @@ Fill out the properties
 ADMIN_DATABASE_URL=
 ```
 
+_(Use `postgresql://postgres:postgres@127.0.0.1:54322/postgres` for local db)_
+
+## Run Supabase Locally
+
+(Requires [Docker](https://docs.docker.com/get-started/get-docker/))
+
+Start containers
+
+```bash
+pnpm exec supabase start
+```
+
+Stop containers
+
+```bash
+pnpm exec supabase stop
+```
+
 ## Create Migrations
 
 Generate migrations based on the schema in code:

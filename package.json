@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "prepare": "husky",
-    "pre-commit": "pnpm run --filter \"./packages/**\" pre-commit"
+    "pre-commit": "pnpm run --sequential --filter \"./packages/**\" pre-commit"
   },
   "keywords": [],
   "author": "",
