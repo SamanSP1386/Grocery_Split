@@ -15,6 +15,7 @@ Grocery_Split/
 ├── packages/
 │   ├── react-frontend/   # Client application (React + Vite + TypeScript)
 │   └── express-backend/  # API server (Express + TypeScript)
+│   └── db/               # API server (Drizzle Schema + TypeScript)
 ├── pnpm-workspace.yaml
 └── package.json
 ```
@@ -39,6 +40,11 @@ ESLint configuration, and Prettier configuration.
 - Provides scripts for local development, production builds, linting, and
   formatting, though there is no functional server to run yet.
 
+## DB — `packages/db`
+
+- Defines drizzle models for the database schema, including scripts to create migrations.
+- Should be imported by other packages such as the express-backend
+
 ## Tooling
 
 - **Husky** manages a pre-commit hook that runs a check across both
@@ -55,12 +61,11 @@ unfinished template — it still contains placeholder content from an
 unrelated example project — but it does specify the following intended
 design decisions:
 
-- **Database:** MySQL.
+- **Host:** Cloudflare Workers.
+- **Database:** Cloudflare D1.
 - **API:** A REST API exposed by the Express backend for communication
   with the frontend.
-- **Authentication:** Username/password authentication, with passwords
-  hashed using bcrypt and database credentials stored in environment
-  variables rather than in source code.
+- **Authentication:** Custom OAuth Authentication with Google, Apple, Microsoft, GitHub
 
 None of these components have been implemented in code yet; they
 represent the intended direction rather than the current state.
