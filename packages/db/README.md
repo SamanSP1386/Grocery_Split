@@ -1,6 +1,7 @@
 # @grocery-split/db
 
-Defines the Supabase models and SQL migrations using [Drizzle ORM](https://orm.drizzle.team/).
+Defines the Cloudflare D1 database models and SQL migrations using
+[Drizzle ORM](https://orm.drizzle.team/).
 
 ## Set Up Environment Variables
 
@@ -11,27 +12,14 @@ cp .env.example .env
 Fill out the properties
 
 ```properties
-# Supabase database admin URL (for migrations only)
-# Should be a user with admin permission (e.g. postgres) to apply all the migrations
-ADMIN_DATABASE_URL=
-```
+# These values are only required to push changes to the live database, or connect to the live database
 
-_(Use `postgresql://postgres:postgres@127.0.0.1:54322/postgres` for local db)_
-
-## Run Supabase Locally
-
-(Requires [Docker](https://docs.docker.com/get-started/get-docker/))
-
-Start containers
-
-```bash
-pnpm exec supabase start
-```
-
-Stop containers
-
-```bash
-pnpm exec supabase stop
+# Go to Workers & Pages -> Overview -> copy Account ID from the right sidebar.
+CLOUDFLARE_ACCOUNT_ID=
+# Open the D1 database you want to connect to and copy Database ID
+CLOUDFLARE_DATABASE_ID=
+# Go to My profile -> API Tokens and create token with D1 edit permissions.
+CLOUDFLARE_D1_TOKEN=
 ```
 
 ## Create Migrations
@@ -50,7 +38,7 @@ pnpm run db:generate-custom
 
 ## Apply migrations
 
-Applies any new migrations to the database connected via `ADMIN_DATABASE_URL`
+Applies any new migrations to the connected database, requires the .env vars to be filled out.
 
 ```bash
 pnpm run db:migrate
