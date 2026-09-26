@@ -1,12 +1,10 @@
 {
 	"name": "@grocery-split/prettier-config",
 	"private": true,
-	"version": "0.0.0",
+	"version": "1.0.0",
 	"type": "module",
 	"exports": "./index.js",
-	"scripts": {
-		"build": "tsc"
-	},
+	"scripts": {},
 	"peerDependencies": {
 		"prettier": ">=3.0.0"
 	},
