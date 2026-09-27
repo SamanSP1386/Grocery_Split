@@ -16,6 +16,7 @@
 		"@grocery-split/prettier-config": "workspace:*",
 		"@tsconfig/node-ts": "^23.6.4",
 		"@tsconfig/node26": "^26.0.1",
+		"@types/express": "^5.0.6",
 		"@types/node": "^24.13.4",
 		"eslint": "^10.10.0",
 		"lint-staged": "^17.5.1",
@@ -29,5 +30,8 @@
 			"pnpm run lint"
 		]
 	},
-	"prettier": "@grocery-split/prettier-config"
+	"prettier": "@grocery-split/prettier-config",
+	"dependencies": {
+		"express": "^5.2.1"
+	}
 }
