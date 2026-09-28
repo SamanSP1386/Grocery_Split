@@ -3,6 +3,10 @@
 	"private": true,
 	"version": "1.0.0",
 	"type": "module",
+	"exports": {
+		"import": "./src/index.ts",
+		"require": null
+	},
 	"scripts": {
 		"format": "prettier --write --ignore-unknown . '!./supabase'",
 		"lint": "eslint .",
