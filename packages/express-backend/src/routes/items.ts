@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { items } from "../store.js";
+import { items } from "../store.ts";
 
 // mergeParams lets this router read :groupId from the parent /groups router
 const router = Router({ mergeParams: true });

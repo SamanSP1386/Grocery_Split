@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { groups } from "../store.js";
-import participantsRouter from "./participants.js";
-import itemsRouter from "./items.js";
-import expensesRouter from "./expenses.js";
+import { groups } from "../store.ts";
+import participantsRouter from "./participants.ts";
+import itemsRouter from "./items.ts";
+import expensesRouter from "./expenses.ts";
 
 const router = Router();
 

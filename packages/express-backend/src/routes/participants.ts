@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { participants } from "../store.js";
+import { participants } from "../store.ts";
 
 // mergeParams lets this router read :groupId from the parent /groups router
 // it's mounted under, per https://expressjs.com/en/guide/routing.html#express-router

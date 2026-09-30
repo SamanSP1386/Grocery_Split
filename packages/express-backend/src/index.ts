@@ -1,8 +1,10 @@
 import express from "express";
-import groupsRouter from "./routes/groups.js";
+import groupsRouter from "./routes/groups.ts";
+import { httpServerHandler } from "cloudflare:node";
+import { env } from "cloudflare:workers";
 
 const app = express();
-const port = process.env.PORT ? Number(process.env.PORT) : 3000;
+const port = env.PORT ? Number(env.PORT) : 3000;
 
 app.use(express.json());
 
@@ -15,3 +17,4 @@ app.use("/groups", groupsRouter);
 app.listen(port, () => {
 	console.log(`Express backend listening on port ${port}`);
 });
+export default httpServerHandler(port);
