@@ -19,7 +19,7 @@ export const membership = sqliteTable(
 		groupId: integer()
 			.notNull()
 			.references(() => group.id, { onDelete: "cascade" }),
-		since: integer({ mode: "timestamp_ms" })
+		createdAt: integer({ mode: "timestamp_ms" })
 			.notNull()
 			.default(sql`(unixepoch('subsecond') * 1000)`)
 	},
