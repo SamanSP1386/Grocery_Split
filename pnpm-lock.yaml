@@ -272,7 +272,7 @@ importers:
     dependencies:
       drizzle-orm:
         specifier: 1.0.0-rc.4
-        version: 1.0.0-rc.4(postgres@3.4.9)(zod@4.6.4)
+        version: 1.0.0-rc.4(postgres@3.4.9)(zod@4.6.5)
     devDependencies:
       '@eslint/js':
         specifier: ^10.0.1
@@ -462,6 +462,43 @@ importers:
       workbox-window:
         specifier: ^7.4.1
         version: 7.4.1
+
+  packages/validation:
+    dependencies:
+      zod:
+        specifier: ^4.6.5
+        version: 4.6.5
+    devDependencies:
+      '@eslint/js':
+        specifier: ^10.0.1
+        version: 10.0.1(eslint@10.10.0(jiti@2.7.0)(supports-color@10.2.2))
+      '@grocery-split/prettier-config':
+        specifier: workspace:*
+        version: link:../prettier-config
+      '@tsconfig/node-ts':
+        specifier: ^23.6.4
+        version: 23.6.4
+      '@tsconfig/node26':
+        specifier: ^26.0.1
+        version: 26.0.1
+      '@types/node':
+        specifier: ^24.13.4
+        version: 24.13.4
+      eslint:
+        specifier: ^10.10.0
+        version: 10.10.0(jiti@2.7.0)(supports-color@10.2.2)
+      lint-staged:
+        specifier: ^17.5.1
+        version: 17.5.1
+      prettier:
+        specifier: 3.9.6
+        version: 3.9.6
+      typescript:
+        specifier: ~6.0.3
+        version: 6.0.3
+      typescript-eslint:
+        specifier: ^8.70.0
+        version: 8.70.0(eslint@10.10.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)
 
 packages:
 
@@ -4744,6 +4781,9 @@ packages:
   zod@4.6.4:
     resolution: {integrity: sha512-AXSD6hvGdvRjajG/l1cC+d6IrhH+sjmPKtYeQdJIK8MFJl3LyClzS+o/YsVC+zQZPupAaeH5skwwm8YqYH7BqA==}
 
+  zod@4.6.5:
+    resolution: {integrity: sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q==}
+
 snapshots:
 
   '@apideck/better-ajv-errors@0.3.7(ajv@8.20.0)':
@@ -6764,10 +6804,10 @@ snapshots:
       get-tsconfig: 4.14.3
       jiti: 2.7.0
 
-  drizzle-orm@1.0.0-rc.4(postgres@3.4.9)(zod@4.6.4):
+  drizzle-orm@1.0.0-rc.4(postgres@3.4.9)(zod@4.6.5):
     optionalDependencies:
       postgres: 3.4.9
-      zod: 4.6.4
+      zod: 4.6.5
 
   dunder-proto@1.0.1:
     dependencies:
@@ -8923,3 +8963,5 @@ snapshots:
   zod@3.25.76: {}
 
   zod@4.6.4: {}
+
+  zod@4.6.5: {}
