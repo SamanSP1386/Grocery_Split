@@ -20,38 +20,38 @@ const router = createBrowserRouter([
 		element: <Index />
 	},
 	{
-		path: "/group/:groupId",
+		path: "/groups/",
 		element: <Groups />
 	},
 	{
-		path: "/group/new-group",
+		path: "/groups/new-group",
 		element: <CreateGroup />
 	},
 	{
-		path: "/group/:groupId/trips",
+		path: "/groups/:groupId/trips",
 		element: <Trips />
 	},
 	{
-		path: "/group/:groupId/new-trip",
+		path: "/groups/:groupId/new-trip",
 		element: <CreateTrip />
 	},
 	{
-		path: "/group/:groupId/trip/:tripId", // Currently only exists within trips (as per figma design), but may be changed to allow standalone list
+		path: "/groups/:groupId/trips/:tripId", // Currently only exists within trips (as per figma design), but may be changed to allow standalone list
 		element: <ShoppingList />
 	},
 	{
-		path: "/group/:groupId/trip/:tripId/item/:itemId/edit",
+		path: "/groups/:groupId/trips/:tripId/items/:itemId/edit",
 		element: <EditItem />
 	},
 	{
-		path: "/group/:groupId/balances",
+		path: "/groups/:groupId/balances",
 		element: <Balances />
 	}
 ]);
 
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
-		<RouterProvider router={router} />,
+		<RouterProvider router={router} />
 	</StrictMode>
 );
 
