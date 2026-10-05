@@ -7,7 +7,7 @@ export const group = z.object({
 export type NewGroup = z.infer<typeof group>;
 
 export const invite = z.object({
-	expires: z.iso.datetime()
+	expires: z.iso.datetime().transform((str) => new Date(str))
 });
 
 export type NewInvite = z.infer<typeof invite>;
