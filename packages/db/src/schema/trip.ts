@@ -11,7 +11,7 @@ export const trip = sqliteTable("trip", {
 		.references(() => group.id, { onDelete: "cascade" }),
 	createdAt: integer({ mode: "timestamp_ms" })
 		.notNull()
-		.default(sql`(unixepoch('subsecond') * 1000)`),
+		.default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`),
 	createdBy: integer()
 		.notNull()
 		.references(() => user.id, { onDelete: "set null" })
