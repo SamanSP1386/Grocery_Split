@@ -4,7 +4,7 @@ import { sql } from "drizzle-orm";
 
 export const group = sqliteTable("group", {
 	id: integer().primaryKey().notNull(),
-	owner: integer()
+	ownerId: integer()
 		.notNull()
 		.references(() => user.id, { onDelete: "restrict" }),
 	name: text().notNull()
@@ -41,7 +41,7 @@ export const invite = sqliteTable(
 		createdAt: integer({ mode: "timestamp_ms" })
 			.notNull()
 			.default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`),
-		createdBy: integer()
+		createdById: integer()
 			.notNull()
 			.references(() => user.id, { onDelete: "cascade" })
 	},

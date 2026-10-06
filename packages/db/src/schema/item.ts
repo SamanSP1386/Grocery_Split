@@ -20,7 +20,7 @@ export const item = sqliteTable(
 		createdAt: integer({ mode: "timestamp_ms" })
 			.notNull()
 			.default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`),
-		createdBy: integer()
+		createdById: integer()
 			.notNull()
 			.references(() => user.id, { onDelete: "set null" })
 	},
