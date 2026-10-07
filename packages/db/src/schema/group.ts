@@ -1,8 +1,8 @@
-import { index, integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { index, integer, primaryKey, snakeCase, text } from "drizzle-orm/sqlite-core";
 import { user } from "./user.ts";
 import { sql } from "drizzle-orm";
 
-export const group = sqliteTable("group", {
+export const group = snakeCase.table("group", {
 	id: integer().primaryKey().notNull(),
 	ownerId: integer()
 		.notNull()
@@ -10,7 +10,7 @@ export const group = sqliteTable("group", {
 	name: text().notNull()
 });
 
-export const membership = sqliteTable(
+export const membership = snakeCase.table(
 	"membership",
 	{
 		userId: integer()
@@ -30,7 +30,7 @@ export const membership = sqliteTable(
 	]
 );
 
-export const invite = sqliteTable(
+export const invite = snakeCase.table(
 	"invite",
 	{
 		code: text().notNull().primaryKey(),
