@@ -3,8 +3,8 @@ import { user } from "./user.ts";
 import { sql } from "drizzle-orm";
 
 export const group = snakeCase.table("group", {
-	id: integer().primaryKey().notNull(),
-	ownerId: integer()
+	id: text().primaryKey().notNull(),
+	ownerId: text()
 		.notNull()
 		.references(() => user.id, { onDelete: "restrict" }),
 	name: text().notNull()
@@ -13,10 +13,10 @@ export const group = snakeCase.table("group", {
 export const membership = snakeCase.table(
 	"membership",
 	{
-		userId: integer()
+		userId: text()
 			.notNull()
 			.references(() => user.id, { onDelete: "cascade" }),
-		groupId: integer()
+		groupId: text()
 			.notNull()
 			.references(() => group.id, { onDelete: "cascade" }),
 		createdAt: integer({ mode: "timestamp_ms" })
@@ -34,14 +34,14 @@ export const invite = snakeCase.table(
 	"invite",
 	{
 		code: text().notNull().primaryKey(),
-		groupId: integer()
+		groupId: text()
 			.notNull()
 			.references(() => group.id, { onDelete: "cascade" }),
 		expires: integer({ mode: "timestamp_ms" }).notNull(),
 		createdAt: integer({ mode: "timestamp_ms" })
 			.notNull()
 			.default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`),
-		createdById: integer()
+		createdById: text()
 			.notNull()
 			.references(() => user.id, { onDelete: "cascade" })
 	},

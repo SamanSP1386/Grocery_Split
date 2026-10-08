@@ -20,7 +20,7 @@ export const item = snakeCase.table(
 		createdAt: integer({ mode: "timestamp_ms" })
 			.notNull()
 			.default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`),
-		createdById: integer()
+		createdById: text()
 			.notNull()
 			.references(() => user.id, { onDelete: "set null" })
 	},
@@ -33,10 +33,10 @@ export const item = snakeCase.table(
 export const wantedItem = snakeCase.table(
 	"wantedItem",
 	{
-		itemId: integer()
+		itemId: text()
 			.notNull()
 			.references(() => group.id, { onDelete: "cascade" }),
-		userId: integer()
+		userId: text()
 			.notNull()
 			.references(() => user.id, { onDelete: "cascade" }),
 		parts: integer().notNull()

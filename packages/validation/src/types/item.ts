@@ -12,7 +12,7 @@ export interface Item {
 	notes: string | null;
 	price: number | null;
 	createdAt: Date;
-	createdBy: User["id"];
+	createdById: User["id"];
 }
 
 export interface WantedItem {

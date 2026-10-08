@@ -1,24 +1,25 @@
 {
-	"name": "@grocery-split/express-backend",
+	"name": "@grocery-split/api",
 	"private": true,
-	"version": "0.0.0",
+	"version": "1.0.0",
 	"type": "module",
 	"scripts": {
 		"format": "prettier --write --ignore-unknown .",
 		"lint": "eslint .",
-		"check": "wrangler types --check && tsc --noEmit",
+		"check": "wrangler types --check --env-interface CloudflareBindings && tsc --noEmit",
 		"pre-commit": "lint-staged",
 		"dev": "wrangler dev src/index.ts",
 		"build": "tsc",
 		"preview": "pnpm run build && wrangler dev",
 		"deploy": "pnpm run build && wrangler deploy",
-		"cf-typegen": "wrangler types",
+		"cf-typegen": "wrangler types --env-interface CloudflareBindings",
 		"prepare": "pnpm run cf-typegen"
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
 		"@grocery-split/db": "workspace:*",
 		"@grocery-split/prettier-config": "workspace:*",
+		"@grocery-split/validation": "workspace:*",
 		"@tsconfig/node-ts": "^23.6.4",
 		"@tsconfig/node26": "^26.0.1",
 		"@types/express": "^5.0.6",
@@ -39,8 +40,10 @@
 	"prettier": "@grocery-split/prettier-config",
 	"dependencies": {
 		"@better-auth/drizzle-adapter": "^1.7.7",
+		"@hono/zod-validator": "^0.9.1",
 		"better-auth": "^1.7.7",
 		"drizzle-orm": "1.0.0-rc.4",
-		"express": "^5.2.1"
+		"nanoid": "^6.0.2",
+		"zod": "^4.6.5"
 	}
 }

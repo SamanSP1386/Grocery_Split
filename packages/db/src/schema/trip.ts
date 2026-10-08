@@ -6,15 +6,15 @@ import { group } from "./group.ts";
 export const trip = snakeCase.table(
 	"trip",
 	{
-		id: integer().primaryKey().notNull(),
+		id: text().primaryKey().notNull(),
 		name: text().notNull(),
-		groupId: integer()
+		groupId: text()
 			.notNull()
 			.references(() => group.id, { onDelete: "cascade" }),
 		createdAt: integer({ mode: "timestamp_ms" })
 			.notNull()
 			.default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`),
-		createdById: integer()
+		createdById: text()
 			.notNull()
 			.references(() => user.id, { onDelete: "set null" })
 	},

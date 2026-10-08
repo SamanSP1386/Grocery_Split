@@ -7,5 +7,5 @@ export interface Trip {
 	name: string;
 	groupId: Group["id"];
 	createdAt: Date;
-	createdBy: User["id"];
+	createdById: User["id"];
 }

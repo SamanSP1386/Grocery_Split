@@ -3,7 +3,7 @@ import type { ID } from "./id.ts";
 
 export interface Group {
 	id: ID;
-	owner: User["id"];
+	ownerId: User["id"];
 	name: string;
 }
 
@@ -18,5 +18,5 @@ export interface Invite {
 	groupId: Group["id"];
 	expires: Date;
 	createdAt: Date;
-	createdBy: User["id"];
+	createdById: User["id"];
 }

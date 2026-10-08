@@ -4,7 +4,7 @@
 	"main": "dist/index.js",
 	// Set this to today's date
 	"compatibility_date": "2026-09-29",
-	"compatibility_flags": ["nodejs_compat", "enable_nodejs_http_server_modules"],
+	"compatibility_flags": ["nodejs_als"],
 	// "assets": {
 	// 	"binding": "ASSETS",
 	// 	"directory": "dist",

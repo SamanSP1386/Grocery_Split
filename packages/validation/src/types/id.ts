@@ -1,1 +1,1 @@
-export type ID = bigint;
+export type ID = string;
