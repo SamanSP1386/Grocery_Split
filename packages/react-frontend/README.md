@@ -1,83 +1,49 @@
-# React + TypeScript + Vite
+# Grocery Split — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the web app for Grocery Split, built with React and Vite.
 
-Currently, two official plugins are available:
+## Getting started
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react)
-  uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc)
-  uses [SWC](https://swc.rs/)
+From the repo root, install everything once:
 
-## React Compiler
-
-The React Compiler is enabled on this template. See
-[this documentation](https://react.dev/learn/react-compiler) for more information.
-
-Note: This will impact Vite dev & build performances. You can also try
-[the experimental native React Compiler support in plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md#rust-react-compiler)
-by using `compiler: true` in the plugin options instead of using the Babel plugin.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable
-type-aware lint rules:
-
-```js
-export default defineConfig([
-	globalIgnores(["dist"]),
-	{
-		files: ["**/*.{ts,tsx}"],
-		extends: [
-			// Other configs...
-
-			// Remove tseslint.configs.recommended and replace with this
-			tseslint.configs.recommendedTypeChecked,
-			// Alternatively, use this for stricter rules
-			tseslint.configs.strictTypeChecked,
-			// Optionally, add this for stylistic rules
-			tseslint.configs.stylisticTypeChecked
-
-			// Other configs...
-		],
-		languageOptions: {
-			parserOptions: {
-				project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-				tsconfigRootDir: import.meta.dirname
-			}
-			// other options...
-		}
-	}
-]);
+```bash
+pnpm install
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and
-[eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint
-rules:
+Then start the dev server from here (`packages/react-frontend`):
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
+```bash
+pnpm dev
+```
 
-export default defineConfig([
-	globalIgnores(["dist"]),
-	{
-		files: ["**/*.{ts,tsx}"],
-		extends: [
-			// Other configs...
-			// Enable lint rules for React
-			reactX.configs["recommended-typescript"],
-			// Enable lint rules for React DOM
-			reactDom.configs.recommended
-		],
-		languageOptions: {
-			parserOptions: {
-				project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-				tsconfigRootDir: import.meta.dirname
-			}
-			// other options...
-		}
-	}
-]);
+This opens the app at `http://localhost:5173` with hot reload, so changes show up right away.
+
+Other useful commands:
+
+```bash
+pnpm build     # type-check and build for production
+pnpm preview   # preview the production build locally
+pnpm lint      # run eslint
+pnpm format    # run prettier
+```
+
+## What's in here
+
+- **React + TypeScript**, bundled with **Vite**.
+- **React Router**, in [data mode](https://reactrouter.com/start/data/routing) — routes are defined
+  as data (see `src/main.tsx`) rather than as JSX, which lets us hook up loaders/actions per route
+  later on.
+- **shadcn/ui** for components, built on top of **Tailwind CSS**. Components live in
+  `src/components/ui` and are meant to be copied/edited directly rather than installed as a
+  black-box package — use the shadcn CLI to add new ones.
+- Set up as a **PWA** (installable, works offline) via `vite-plugin-pwa`.
+
+## Project layout
+
+```
+src/
+├── routes/        # page components, wired up to routes in main.tsx
+├── components/ui/ # shadcn/ui components
+├── lib/           # shared helpers (e.g. cn() for merging classNames)
+└── main.tsx       # app entry point, router setup
 ```
