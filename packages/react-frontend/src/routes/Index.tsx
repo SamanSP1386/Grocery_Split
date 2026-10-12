@@ -1,5 +1,5 @@
-function App() {
+function Home() {
 	return <>Hello, World!</>;
 }
 
-export default App;
+export default Home;

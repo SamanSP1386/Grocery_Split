@@ -1,27 +1,27 @@
-import { index, integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { index, integer, primaryKey, snakeCase, text } from "drizzle-orm/sqlite-core";
 import { user } from "./user.ts";
 import { sql } from "drizzle-orm";
 
-export const group = sqliteTable("group", {
-	id: integer().primaryKey().notNull(),
-	owner: integer()
+export const group = snakeCase.table("group", {
+	id: text().primaryKey().notNull(),
+	ownerId: text()
 		.notNull()
 		.references(() => user.id, { onDelete: "restrict" }),
 	name: text().notNull()
 });
 
-export const membership = sqliteTable(
+export const membership = snakeCase.table(
 	"membership",
 	{
-		userId: integer()
+		userId: text()
 			.notNull()
 			.references(() => user.id, { onDelete: "cascade" }),
-		groupId: integer()
+		groupId: text()
 			.notNull()
 			.references(() => group.id, { onDelete: "cascade" }),
-		since: integer({ mode: "timestamp_ms" })
+		createdAt: integer({ mode: "timestamp_ms" })
 			.notNull()
-			.default(sql`(unixepoch('subsecond') * 1000)`)
+			.default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
 	},
 	(t) => [
 		primaryKey({ columns: [t.userId, t.groupId] }),
@@ -30,18 +30,18 @@ export const membership = sqliteTable(
 	]
 );
 
-export const invite = sqliteTable(
+export const invite = snakeCase.table(
 	"invite",
 	{
 		code: text().notNull().primaryKey(),
-		groupId: integer()
+		groupId: text()
 			.notNull()
 			.references(() => group.id, { onDelete: "cascade" }),
 		expires: integer({ mode: "timestamp_ms" }).notNull(),
 		createdAt: integer({ mode: "timestamp_ms" })
 			.notNull()
-			.default(sql`(unixepoch('subsecond') * 1000)`),
-		createdBy: integer()
+			.default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`),
+		createdById: text()
 			.notNull()
 			.references(() => user.id, { onDelete: "cascade" })
 	},

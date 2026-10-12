@@ -6,7 +6,7 @@
 		"rootDir": "./src",
 		"outDir": "./dist",
 
-		"types": ["node"],
+		"types": ["./worker-configuration.d.ts", "node"],
 
 		"sourceMap": false,
 		"declaration": false,

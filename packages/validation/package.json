@@ -1,14 +1,16 @@
 {
-	"name": "@grocery-split/express-backend",
+	"name": "@grocery-split/validation",
 	"private": true,
-	"version": "0.0.0",
+	"version": "1.0.0",
 	"type": "module",
+	"exports": {
+		"import": "./src/index.ts",
+		"require": null
+	},
 	"scripts": {
-		"format": "prettier --write --ignore-unknown .",
+		"format": "prettier --write --ignore-unknown . '!./supabase'",
 		"lint": "eslint .",
-		"dev": "node --watch src/index.ts",
 		"build": "tsc",
-		"start": "node dist/index.js",
 		"pre-commit": "lint-staged"
 	},
 	"devDependencies": {
@@ -16,7 +18,6 @@
 		"@grocery-split/prettier-config": "workspace:*",
 		"@tsconfig/node-ts": "^23.6.4",
 		"@tsconfig/node26": "^26.0.1",
-		"@types/express": "^5.0.6",
 		"@types/node": "^24.13.4",
 		"eslint": "^10.10.0",
 		"lint-staged": "^17.5.1",
@@ -32,6 +33,6 @@
 	},
 	"prettier": "@grocery-split/prettier-config",
 	"dependencies": {
-		"express": "^5.2.1"
+		"zod": "^4.6.5"
 	}
 }

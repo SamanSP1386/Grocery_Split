@@ -1,10 +1,10 @@
-import { index, integer, primaryKey, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { index, integer, primaryKey, real, snakeCase, text } from "drizzle-orm/sqlite-core";
 import { user } from "./user.ts";
 import { group } from "./group.ts";
 import { trip } from "./trip.ts";
 import { sql } from "drizzle-orm";
 
-export const item = sqliteTable(
+export const item = snakeCase.table(
 	"item",
 	{
 		id: integer().primaryKey().notNull(),
@@ -19,21 +19,24 @@ export const item = sqliteTable(
 		price: real(), // CAN BE NULL if the price is not known yet
 		createdAt: integer({ mode: "timestamp_ms" })
 			.notNull()
-			.default(sql`(unixepoch('subsecond') * 1000)`),
-		createdBy: integer()
+			.default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`),
+		createdById: text()
 			.notNull()
 			.references(() => user.id, { onDelete: "set null" })
 	},
-	(t) => [index("item_groupId_tripId_idx").on(t.groupId, t.tripId)]
+	(t) => [
+		index("item_groupId_idx").on(t.groupId),
+		index("item_groupId_tripId_idx").on(t.groupId, t.tripId)
+	]
 );
 
-export const wantedItem = sqliteTable(
+export const wantedItem = snakeCase.table(
 	"wantedItem",
 	{
-		itemId: integer()
+		itemId: text()
 			.notNull()
 			.references(() => group.id, { onDelete: "cascade" }),
-		userId: integer()
+		userId: text()
 			.notNull()
 			.references(() => user.id, { onDelete: "cascade" }),
 		parts: integer().notNull()
