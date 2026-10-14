@@ -8,12 +8,12 @@ import { db } from "../lib/db.ts";
 // If groupId is in the parameter, makes sure the requesting user is a part of that group
 // Requires the groupId parameter to already be validated
 export const enforceUserInGroupParam = createMiddleware<
-	AppEnv,
+	AppEnv<true>,
 	string,
 	{ out: { param: { groupId: string } } }
 >(async (c, next) => {
+	const { user } = c.var.session;
 	const { groupId } = c.req.valid("param");
-	const { user } = c.get("session")!;
 
 	const [existingMembership] = await db
 		.select({ groupId: schema.membership.groupId })

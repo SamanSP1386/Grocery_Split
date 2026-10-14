@@ -10,12 +10,12 @@ import { and, eq } from "drizzle-orm";
 import { HTTPException } from "hono/http-exception";
 import { enforceUserInGroupParam } from "../middleware/enforceUserInGroupParam.ts";
 
-const group = new Hono<AppEnv>()
+const group = new Hono<AppEnv<true>>()
 	.use(enforceAuth)
 
 	// Getting all groups (that the current user is in)
 	.get("/", async (c) => {
-		const { user } = c.get("session")!;
+		const { user } = c.var.session;
 
 		// Join with memberships to select groups with a membership user id
 		const res = await db
@@ -45,7 +45,7 @@ const group = new Hono<AppEnv>()
 
 	// Creating groups
 	.post("/", zValidator("json", validator.group), async (c) => {
-		const { user } = c.get("session")!;
+		const { user } = c.var.session;
 		const data = c.req.valid("json");
 
 		const res = await db
@@ -92,7 +92,7 @@ const group = new Hono<AppEnv>()
 		enforceUserInGroupParam,
 		zValidator("json", validator.groupOwner),
 		async (c) => {
-			const { user } = c.get("session")!;
+			const { user } = c.var.session;
 			const data = c.req.valid("json");
 			const { groupId } = c.req.valid("param");
 
@@ -103,7 +103,7 @@ const group = new Hono<AppEnv>()
 				.where(
 					and(eq(schema.membership.groupId, groupId), eq(schema.membership.userId, data.ownerId))
 				);
-			if (!existingMembership) throw new HTTPException(404, { message: "Group Not Found" });
+			if (!existingMembership) throw new HTTPException(404, { message: "User Not In Group" });
 
 			// Update the actual group
 			const res = await db

@@ -4,10 +4,12 @@ import group from "./routes/groups.ts";
 import { HTTPException } from "hono/http-exception";
 import { useAuth } from "./middleware/auth.ts";
 
-export interface AppEnv extends Env {
+export interface AppEnv<EnforceAuth extends boolean = false> extends Env {
 	Bindings: CloudflareBindings;
 	Variables: {
-		session: typeof auth.$Infer.Session | null;
+		session: EnforceAuth extends true
+			? typeof auth.$Infer.Session
+			: typeof auth.$Infer.Session | null;
 	};
 }
 
@@ -22,6 +24,7 @@ const app = new Hono<AppEnv>()
 	.route("/group", group)
 
 	// error handling
+	.notFound((c) => c.json({ message: "Not Found" }, 404))
 	.onError((err, c) => {
 		// For thrown http errors
 		if (err instanceof HTTPException) {
