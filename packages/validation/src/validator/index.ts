@@ -1,3 +1,4 @@
+export * from "./id.ts";
 export * from "./user.ts";
 export * from "./group.ts";
 export * from "./trip.ts";

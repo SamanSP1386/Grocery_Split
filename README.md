@@ -16,12 +16,10 @@ These describe the product goals; the frontend and API are not yet connected.
 
 ## Project Structure
 
-- `packages/react-frontend`: React and Vite web application
-- `packages/express-backend`: Express API, developed with Cloudflare Wrangler
+- `packages/react-frontend`: React with Vite SPA PWA
+- `packages/api`: Hono API using Cloudflare Workers
 - `packages/db`: Drizzle schema and Cloudflare D1 migrations
 - `packages/validation`: Shared TypeScript types and Zod schemas
-
-See [`architecture.md`](architecture.md) for more about the package boundaries.
 
 ## Getting Started
 
