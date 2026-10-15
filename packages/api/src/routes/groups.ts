@@ -8,7 +8,8 @@ import { db } from "../lib/db.ts";
 import { schema } from "@grocery-split/db";
 import { and, eq } from "drizzle-orm";
 import { HTTPException } from "hono/http-exception";
-import { enforceUserInGroupParam } from "../middleware/enforceUserInGroupParam.ts";
+import { validateGroupParam } from "../middleware/validateParams.ts";
+import trips from "./trips.ts";
 
 const group = new Hono<AppEnv<true>>()
 	.use(enforceAuth)
@@ -28,20 +29,13 @@ const group = new Hono<AppEnv<true>>()
 	})
 
 	// Getting group by id
-	.get(
-		"/:groupId",
-		zValidator("param", validator.groupParams),
-		enforceUserInGroupParam,
-		async (c) => {
-			const { groupId } = c.req.valid("param");
+	.get("/:groupId", validateGroupParam, async (c) => {
+		// We know the user must be a part of this group due to the enforceUserInGroup middleware
+		const res = await db.select().from(schema.group).where(eq(schema.group.id, c.var.groupId));
 
-			// We know the user must be a part of this group due to the enforceUserInGroup middleware
-			const res = await db.select().from(schema.group).where(eq(schema.group.id, groupId));
-
-			if (res.length < 1) throw new HTTPException(404, { message: "Group Not Found" });
-			return c.json(res[0] as Group);
-		}
-	)
+		if (res.length < 1) throw new HTTPException(404, { message: "Group Not Found" });
+		return c.json(res[0] as Group);
+	})
 
 	// Creating groups
 	.post("/", zValidator("json", validator.group), async (c) => {
@@ -62,61 +56,53 @@ const group = new Hono<AppEnv<true>>()
 	})
 
 	// Updating group
-	.patch(
-		"/:groupId",
-		zValidator("param", validator.groupParams),
-		enforceUserInGroupParam,
-		zValidator("json", validator.group),
-		async (c) => {
-			const data = c.req.valid("json");
-			const { groupId } = c.req.valid("param");
+	.patch("/:groupId", validateGroupParam, zValidator("json", validator.group), async (c) => {
+		const data = c.req.valid("json");
 
-			// Update the actual group
-			const res = await db
-				.update(schema.group)
-				.set({
-					...data
-				})
-				.where(eq(schema.group.id, groupId))
-				.returning();
+		// Update the actual group
+		const res = await db
+			.update(schema.group)
+			.set(data)
+			.where(eq(schema.group.id, c.var.groupId))
+			.returning();
 
-			if (res.length < 1) throw new HTTPException(404, { message: "Group Not Found" });
-			return c.json(res[0] as Group);
-		}
-	)
+		if (res.length < 1) throw new HTTPException(404, { message: "Group Not Found" });
+		return c.json(res[0] as Group);
+	})
 
 	// Updating group owner (can only be done by the existing group owner)
 	.patch(
 		"/:groupId/owner",
-		zValidator("param", validator.groupParams),
-		enforceUserInGroupParam,
+		validateGroupParam,
 		zValidator("json", validator.groupOwner),
 		async (c) => {
 			const { user } = c.var.session;
 			const data = c.req.valid("json");
-			const { groupId } = c.req.valid("param");
 
 			// Make sure the new user is part of the group
 			const [existingMembership] = await db
 				.select({ groupId: schema.membership.groupId })
 				.from(schema.membership)
 				.where(
-					and(eq(schema.membership.groupId, groupId), eq(schema.membership.userId, data.ownerId))
+					and(
+						eq(schema.membership.groupId, c.var.groupId),
+						eq(schema.membership.userId, data.ownerId)
+					)
 				);
 			if (!existingMembership) throw new HTTPException(404, { message: "User Not In Group" });
 
 			// Update the actual group
 			const res = await db
 				.update(schema.group)
-				.set({
-					...data
-				})
-				.where(and(eq(schema.group.id, groupId), eq(schema.group.ownerId, user.id))) // Make sure the current ownerId matches the user making the request
+				.set(data)
+				.where(and(eq(schema.group.id, c.var.groupId), eq(schema.group.ownerId, user.id))) // Make sure the current ownerId matches the user making the request
 				.returning();
 
 			if (res.length < 1) throw new HTTPException(404, { message: "Group Not Found" });
 			return c.json(res[0] as Group);
 		}
-	);
+	)
+	// Handle all trip requests related to this group
+	.route("/:groupId/trips", trips);
 
 export default group;

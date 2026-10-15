@@ -40,7 +40,6 @@
 	"prettier": "@grocery-split/prettier-config",
 	"dependencies": {
 		"@better-auth/drizzle-adapter": "^1.7.7",
-		"@hono/zod-validator": "^0.9.1",
 		"better-auth": "^1.7.7",
 		"drizzle-orm": "1.0.0-rc.4",
 		"nanoid": "^6.0.2",

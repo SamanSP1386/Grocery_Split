@@ -6,14 +6,14 @@ import { useAuth } from "./middleware/auth.ts";
 
 export interface AppEnv<EnforceAuth extends boolean = false> extends Env {
 	Bindings: CloudflareBindings;
-	Variables: {
+	Variables: Record<string, unknown> & {
 		session: EnforceAuth extends true
 			? typeof auth.$Infer.Session
 			: typeof auth.$Infer.Session | null;
 	};
 }
 
-const app = new Hono<AppEnv>()
+const app = new Hono<AppEnv<false>>()
 	.basePath("/api")
 
 	// auth

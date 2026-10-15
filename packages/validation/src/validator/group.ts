@@ -13,10 +13,6 @@ export const groupOwner = z.object({
 
 export type UpdateGroupOwner = z.infer<typeof groupOwner>;
 
-export const groupParams = z.object({
-	groupId: idValidator
-});
-
 export const invite = z.object({
 	expires: z.iso.datetime().transform((str) => new Date(str))
 });
