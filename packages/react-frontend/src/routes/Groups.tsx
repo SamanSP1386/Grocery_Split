@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarGroup } from "@/components/ui/avatar";
 import { Link, useNavigate } from "react-router";
 import { Plus, ChevronRight } from "lucide-react";
+import JoinGroupDialog from "@/components/JoinGroupDialog";
 
 const groups = [
 	{
@@ -43,8 +44,7 @@ function Groups() {
 				<div>
 					<h1 className="font-heading text-xl font-bold">My Groups</h1>
 					<p className="mt-1 text-xs font-medium text-muted-foreground">
-						Have a code?{" "}
-						<button className="text-foreground underline underline-offset-2">Join a group</button>
+						Have a code? <JoinGroupDialog />
 					</p>
 				</div>
 				<Avatar className="bg-muted">
