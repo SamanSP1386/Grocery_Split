@@ -12,6 +12,7 @@ import CreateTrip from "./routes/CreateTrip";
 import ShoppingList from "./routes/ShoppingList";
 import EditItem from "./routes/EditItem";
 import Balances from "./routes/Balances";
+import Invite from "./routes/Invite";
 import AppLayout, { type PageHandle } from "./components/AppLayout";
 import GroupTabs from "./components/GroupTabs";
 
@@ -33,6 +34,11 @@ const router = createBrowserRouter([
 				path: "/groups/new-group",
 				element: <CreateGroup />,
 				handle: { title: "New Group", back: "/groups/" } satisfies PageHandle
+			},
+			{
+				path: "/invite/:code",
+				element: <Invite />,
+				handle: { title: "Join Group", back: "/groups/" } satisfies PageHandle
 			},
 			{
 				path: "/groups/:groupId/new-trip",
