@@ -12,6 +12,8 @@ import CreateTrip from "./routes/CreateTrip";
 import ShoppingList from "./routes/ShoppingList";
 import EditItem from "./routes/EditItem";
 import Balances from "./routes/Balances";
+import AppLayout, { type PageHandle } from "./components/AppLayout";
+import GroupTabs from "./components/GroupTabs";
 
 // https://reactrouter.com/start/data/routing
 const router = createBrowserRouter([
@@ -24,28 +26,54 @@ const router = createBrowserRouter([
 		element: <Groups />
 	},
 	{
-		path: "/groups/new-group",
-		element: <CreateGroup />
-	},
-	{
-		path: "/groups/:groupId/trips",
-		element: <Trips />
-	},
-	{
-		path: "/groups/:groupId/new-trip",
-		element: <CreateTrip />
-	},
-	{
-		path: "/groups/:groupId/trips/:tripId", // Currently only exists within trips (as per figma design), but may be changed to allow standalone list
-		element: <ShoppingList />
-	},
-	{
-		path: "/groups/:groupId/trips/:tripId/items/:itemId/edit",
-		element: <EditItem />
-	},
-	{
-		path: "/groups/:groupId/balances",
-		element: <Balances />
+		// Pages with the shared header and back button
+		element: <AppLayout />,
+		children: [
+			{
+				path: "/groups/new-group",
+				element: <CreateGroup />,
+				handle: { title: "New Group", back: "/groups/" } satisfies PageHandle
+			},
+			{
+				path: "/groups/:groupId/new-trip",
+				element: <CreateTrip />,
+				handle: { title: "New Trip", back: "/groups/:groupId/trips" } satisfies PageHandle
+			},
+			{
+				path: "/groups/:groupId/trips/:tripId/items/:itemId/edit",
+				element: <EditItem />,
+				handle: {
+					title: "Edit Item",
+					back: "/groups/:groupId/trips/:tripId"
+				} satisfies PageHandle
+			},
+			{
+				// Pages inside a group also get the bottom tabs
+				element: <GroupTabs />,
+				children: [
+					{
+						path: "/groups/:groupId/trips",
+						element: <Trips />,
+						handle: { title: "Trips", back: "/groups/" } satisfies PageHandle
+					},
+					{
+						path: "/groups/:groupId/trips/:tripId", // Currently only exists within trips (as per figma design), but may be changed to allow standalone list
+						element: <ShoppingList />,
+						handle: { title: "Trip", back: "/groups/:groupId/trips" } satisfies PageHandle
+					},
+					{
+						path: "/groups/:groupId/list", // Group-wide list, the page itself is being built in #63
+						element: <ShoppingList />,
+						handle: { title: "Shopping List", back: "/groups/" } satisfies PageHandle
+					},
+					{
+						path: "/groups/:groupId/balances",
+						element: <Balances />,
+						handle: { title: "Balances", back: "/groups/" } satisfies PageHandle
+					}
+				]
+			}
+		]
 	}
 ]);
 
