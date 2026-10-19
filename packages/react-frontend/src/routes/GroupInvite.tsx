@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { parseInviteCode } from "@/lib/invite";
 
-function Invite() {
+function GroupInvite() {
 	const code = parseInviteCode(useParams().code ?? "");
 
 	if (!code) {
@@ -29,4 +29,4 @@ function Invite() {
 	);
 }
 
-export default Invite;
+export default GroupInvite;

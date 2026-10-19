@@ -1,5 +1,7 @@
+import ItemEditor from "@/components/ItemEditor";
+
 function EditItem() {
-	return <>Hello, World!</>;
+	return <ItemEditor editing />;
 }
 
 export default EditItem;
