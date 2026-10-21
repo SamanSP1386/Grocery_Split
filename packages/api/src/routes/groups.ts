@@ -45,8 +45,8 @@ const group = new Hono<AppEnv<true>>()
 		const res = await db
 			.insert(schema.group)
 			.values({
-				id: nanoid(),
 				...data,
+				id: nanoid(),
 				ownerId: user.id
 			})
 			.returning();

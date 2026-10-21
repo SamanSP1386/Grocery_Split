@@ -1,14 +1,64 @@
 import { Hono } from "hono";
 import type { AppEnv } from "../index.ts";
 import { validateGroupAndTripParam, validateGroupParam } from "../middleware/validateParams.ts";
+import { db } from "../lib/db.ts";
+import { schema } from "@grocery-split/db";
+import { eq } from "drizzle-orm";
+import { HTTPException } from "hono/http-exception";
+import { validator, type Trip } from "@grocery-split/validation";
+import { zValidator } from "../middleware/zValidator.ts";
+import { nanoid } from "../lib/nanoid.ts";
 
 // Is a route defined in ./groups.ts so auth is already enforced
 const trips = new Hono<AppEnv<true>>()
-	.get("/", validateGroupParam, (c) => {
-		return c.json({ test: true });
+	// List all trips in the current group
+	.get("/", validateGroupParam, async (c) => {
+		const res = await db.select().from(schema.trip).where(eq(schema.trip.groupId, c.var.groupId));
+
+		return c.json(res as Trip[]);
 	})
-	.get("/:tripId", validateGroupAndTripParam, (c) => {
-		return c.json({ test: true });
+
+	// Getting trip by id
+	.get("/:tripId", validateGroupAndTripParam, async (c) => {
+		// We know the user must be a part of this group due to the enforceUserInGroup middleware
+		const res = await db.select().from(schema.trip).where(eq(schema.trip.id, c.var.tripId));
+
+		if (res.length < 1) throw new HTTPException(404, { message: "Trip Not Found" });
+		return c.json(res[0] as Trip);
+	})
+
+	// Creating groups
+	.post("/", validateGroupParam, zValidator("json", validator.trip), async (c) => {
+		const { user } = c.var.session;
+		const data = c.req.valid("json");
+
+		const res = await db
+			.insert(schema.trip)
+			.values({
+				...data,
+				id: nanoid(),
+				groupId: c.var.groupId,
+				createdById: user.id
+			})
+			.returning();
+
+		if (res.length < 1) throw new HTTPException(500, { message: "Trip Not Found" });
+		return c.json(res[0] as Trip);
+	})
+
+	// Updating group
+	.patch("/:tripId", validateGroupAndTripParam, zValidator("json", validator.trip), async (c) => {
+		const data = c.req.valid("json");
+
+		// Update the actual group
+		const res = await db
+			.update(schema.trip)
+			.set(data)
+			.where(eq(schema.trip.id, c.var.tripId))
+			.returning();
+
+		if (res.length < 1) throw new HTTPException(404, { message: "Trip Not Found" });
+		return c.json(res[0] as Trip);
 	});
 
 export default trips;
