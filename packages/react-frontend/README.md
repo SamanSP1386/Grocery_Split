@@ -10,6 +10,12 @@ From the repo root, install everything once:
 pnpm install
 ```
 
+Copy the environment variables template
+
+```bash
+cp .env.example .env
+```
+
 Then start the dev server from here (`packages/react-frontend`):
 
 ```bash
@@ -33,6 +39,7 @@ pnpm format    # run prettier
 - **React Router**, in [data mode](https://reactrouter.com/start/data/routing) — routes are defined
   as data (see `src/main.tsx`) rather than as JSX, which lets us hook up loaders/actions per route
   later on.
+- **Hono RPC**, typed api client, importing the `@grocery-split/api` router type
 - **shadcn/ui** for components, built on top of **Tailwind CSS**. Components live in
   `src/components/ui` and are meant to be copied/edited directly rather than installed as a
   black-box package — use the shadcn CLI to add new ones.

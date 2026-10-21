@@ -3,6 +3,10 @@
 	"private": true,
 	"version": "1.0.0",
 	"type": "module",
+	"exports": {
+		"import": "./src/index.ts",
+		"require": null
+	},
 	"scripts": {
 		"format": "prettier --write --ignore-unknown .",
 		"lint": "eslint .",
@@ -42,6 +46,7 @@
 		"@better-auth/drizzle-adapter": "^1.7.7",
 		"better-auth": "^1.7.7",
 		"drizzle-orm": "1.0.0-rc.4",
+		"hono": "^4.13.13",
 		"nanoid": "^6.0.2",
 		"zod": "^4.6.5"
 	}
