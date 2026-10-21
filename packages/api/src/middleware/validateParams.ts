@@ -1,7 +1,7 @@
 import { createMiddleware } from "hono/factory";
 import type { AppEnv } from "../index.ts";
 import { schema } from "@grocery-split/db";
-import { and, eq } from "drizzle-orm";
+import { and, count, eq } from "drizzle-orm";
 import { HTTPException } from "hono/http-exception";
 import { db } from "../lib/db.ts";
 import { validator } from "@grocery-split/validation";
@@ -15,13 +15,42 @@ export const validateGroupParam = createMiddleware<
 	const { success, data, error } = await validator.groupParams.safeParseAsync(c.req.param());
 	if (!success) throw new HTTPException(400, { message: error.issues[0].message });
 
-	const [existingMembership] = await db
-		.select({ groupId: schema.membership.groupId })
+	const [exists] = await db
+		.select({ count: count() })
 		.from(schema.membership)
 		.where(and(eq(schema.membership.groupId, data.groupId), eq(schema.membership.userId, user.id)));
-	if (!existingMembership) throw new HTTPException(404, { message: "Group Not Found" });
+	if (!exists || exists.count == 0) throw new HTTPException(404, { message: "Group Not Found" });
 
 	c.set("groupId", data.groupId);
+
+	await next();
+});
+
+// If groupId and tripId are in the parameter, makes sure the requesting user is a part of that group and that thr tip is part of that group
+export const validateGroupAndTripParam = createMiddleware<
+	AppEnv<true> & { Variables: { groupId: string; tripId: string } }
+>(async (c, next) => {
+	const { user } = c.var.session;
+
+	const { success, data, error } = await validator.groupTripParams.safeParseAsync(c.req.param());
+	if (!success) throw new HTTPException(400, { message: error.issues[0].message });
+
+	const [exists] = await db
+		.select({ count: count() })
+		.from(schema.membership)
+		.innerJoin(schema.trip, eq(schema.membership.groupId, schema.trip.groupId))
+		.where(
+			and(
+				eq(schema.membership.userId, user.id),
+				eq(schema.membership.groupId, data.groupId),
+				eq(schema.trip.id, data.tripId)
+			)
+		);
+	if (!exists || exists.count == 0)
+		throw new HTTPException(404, { message: "Group or Trip Not Found" });
+
+	c.set("groupId", data.groupId);
+	c.set("tripId", data.tripId);
 
 	await next();
 });
