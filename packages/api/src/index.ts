@@ -29,7 +29,7 @@ const app = new Hono<AppEnv<false>>()
 	.use(useAuth) // Doesn't enforce it, just handles it if it exists. Use `router.use(enforceAuth)` for that.
 
 	// routes
-	.route("/group", group)
+	.route("/groups", group)
 
 	// error handling
 	.notFound((c) => c.json({ message: "Not Found" }, 404))
