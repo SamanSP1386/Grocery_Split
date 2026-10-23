@@ -6,7 +6,8 @@ import { schema } from "@grocery-split/db";
 
 export const auth = betterAuth({
 	appName: "Grocery Split",
-	baseURL: env.BETTER_AUTH_URL,
+	baseURL: env.API_BASE,
+	trustedOrigins: [env.FRONTEND_BASE],
 	secret: env.BETTER_AUTH_SECRET,
 	database: drizzleAdapter(db, { provider: "sqlite", schema }),
 	emailAndPassword: {

@@ -18,7 +18,7 @@ const app = new Hono<AppEnv<false>>()
 	.basePath("/api")
 	.use("*", async (c, next) => {
 		const corsMiddlewareHandler = cors({
-			origin: c.env.FRONTEND_URL,
+			origin: c.env.FRONTEND_BASE,
 			credentials: true
 		});
 		return corsMiddlewareHandler(c, next);

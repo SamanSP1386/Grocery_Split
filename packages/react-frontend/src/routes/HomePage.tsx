@@ -5,7 +5,7 @@ function HomePage() {
 	const signIn = async () =>
 		authClient.signIn.social({
 			provider: "google",
-			callbackURL: "/groups"
+			callbackURL: new URL("/groups", import.meta.env.VITE_FRONTEND_BASE).toString()
 		});
 
 	return (
