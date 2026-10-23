@@ -38,7 +38,12 @@ git pull
 pnpm install
 ```
 
-Database migrations are only needed when working with D1 or changing the database schema; see [`packages/db/README.md`](packages/db/README.md).
+In order to prepare the database for local development for the first time (or after any database changes, see [`packages/db/README.md`](packages/db/README.md)):
+
+```bash
+pnpm --filter @grocery-split/api create-database
+pnpm --filter @grocery-split/db db:migrate
+```
 
 ### Run Locally
 
@@ -49,10 +54,10 @@ pnpm --filter @grocery-split/react-frontend dev
 ```
 
 ```bash
-pnpm --filter @grocery-split/express-backend dev
+pnpm --filter @grocery-split/api dev
 ```
 
-Open the URL printed by Vite to view the frontend. It currently displays a placeholder and does not use the API, so these commands do not yet run a connected Grocery Split application. The API runs separately through Wrangler.
+Open the URL printed by Vite (usually [http://localhost:5173](http://localhost:5173)) to view the frontend. The API runs separately through Wrangler on a different port.
 
 ## Tests
 

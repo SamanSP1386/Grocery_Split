@@ -27,5 +27,5 @@
 		// Recommended Options
 		"strict": true
 	},
-	"include": ["drizzle.config.ts"]
+	"include": ["drizzle.config.ts", "drizzle-dev.config.ts"]
 }

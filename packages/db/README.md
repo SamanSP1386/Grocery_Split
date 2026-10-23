@@ -9,7 +9,7 @@ Defines the Cloudflare D1 database models and SQL migrations using
 cp .env.example .env
 ```
 
-Fill out the properties
+Fill out the properties (only needed if dealing with production)
 
 ```properties
 # These values are only required to push changes to the live database, or connect to the live database
@@ -38,10 +38,17 @@ pnpm run db:generate-custom
 
 ## Apply migrations
 
-Applies any new migrations to the connected database, requires the .env vars to be filled out.
+Applies any new migrations to the **local database**, aka the local miniflare D1 database located in
+`.wrangler` within the `api` package
 
 ```bash
 pnpm run db:migrate
+```
+
+Applies any new migrations to the **production database**, requires the .env vars to be filled out.
+
+```bash
+pnpm run db:migrate-prod
 ```
 
 ## Other Commands
@@ -57,5 +64,8 @@ Open drizzle studio hosted at [local.drizzle.studio](http://local.drizzle.studio
 db. ([documentation](https://orm.drizzle.team/docs/drizzle-kit-studio))
 
 ```bash
+# Insect the dev database
 pnpm run db:studio
+# Inspect the production database (requires env vars)
+pnpm run db:studio-prod
 ```
