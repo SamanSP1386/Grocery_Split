@@ -3,6 +3,7 @@ import { Hono, type Env } from "hono";
 import group from "./routes/groups.ts";
 import { HTTPException } from "hono/http-exception";
 import { useAuth } from "./middleware/auth.ts";
+import { cors } from "hono/cors";
 
 export interface AppEnv<EnforceAuth extends boolean = false> extends Env {
 	Bindings: CloudflareBindings;
@@ -15,9 +16,16 @@ export interface AppEnv<EnforceAuth extends boolean = false> extends Env {
 
 const app = new Hono<AppEnv<false>>()
 	.basePath("/api")
+	.use("*", async (c, next) => {
+		const corsMiddlewareHandler = cors({
+			origin: c.env.FRONTEND_URL,
+			credentials: true
+		});
+		return corsMiddlewareHandler(c, next);
+	})
 
 	// auth
-	.on(["POST", "GET"], "/auth/*", (c) => auth.handler(c.req.raw))
+	.all("/auth/*", (c) => auth.handler(c.req.raw))
 	.use(useAuth) // Doesn't enforce it, just handles it if it exists. Use `router.use(enforceAuth)` for that.
 
 	// routes
