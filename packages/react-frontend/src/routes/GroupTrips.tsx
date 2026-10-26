@@ -1,9 +1,9 @@
 import { Link, useParams } from "react-router";
-import { Plus, ShoppingCart } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarGroup } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import AddButton from "@/components/AddButton";
 
 // Hardcoded example data for the placeholder UI. Real trip data will be wired
 // up later; this just mirrors the design so the page renders identically.
@@ -92,16 +92,7 @@ function GroupTrips() {
 					</Card>
 				)}
 			</section>
-			<div className="mt-auto flex justify-end pt-4">
-				<Button
-					size="icon"
-					aria-label="Create a trip"
-					nativeButton={false}
-					render={<Link to={`/groups/${groupId}/new-trip`} />}
-					className="size-14 rounded-full shadow-md">
-					<Plus aria-hidden="true" className="size-7" />
-				</Button>
-			</div>
+			<AddButton to={`/groups/${groupId}/new-trip`} label="Create a trip" />
 		</>
 	);
 }
