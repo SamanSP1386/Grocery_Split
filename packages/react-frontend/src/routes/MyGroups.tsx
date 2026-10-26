@@ -1,13 +1,11 @@
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarGroup } from "@/components/ui/avatar";
-import { Link, useNavigate } from "react-router";
-import { Plus, ChevronRight } from "lucide-react";
+import { Link } from "react-router";
+import { ChevronRight } from "lucide-react";
 import { groups } from "@/data/groups";
+import AddButton from "@/components/AddButton";
 
 function MyGroups() {
-	const navigate = useNavigate();
-
 	return (
 		<main className="mx-auto flex min-h-dvh w-full max-w-6xl flex-col gap-5 bg-background p-4 sm:gap-6 sm:p-6 lg:p-8">
 			<header className="flex items-center justify-between gap-4">
@@ -57,15 +55,7 @@ function MyGroups() {
 				))}
 			</section>
 
-			<div className="mt-auto flex justify-end pt-4">
-				<Button
-					size="icon"
-					className="size-14 rounded-full shadow-md"
-					aria-label="Create a group"
-					onClick={() => navigate("/groups/new-group")}>
-					<Plus className="size-7" />
-				</Button>
-			</div>
+			<AddButton to="/groups/new-group" label="Create a group" />
 		</main>
 	);
 }

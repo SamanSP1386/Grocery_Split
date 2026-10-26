@@ -1,9 +1,9 @@
 import { Link, useParams } from "react-router";
-import { ArrowLeft, ListChecks, Plus } from "lucide-react";
+import { ArrowLeft, ListChecks } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarGroup } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import AddButton from "@/components/AddButton";
 
 // Hardcoded example data for the placeholder UI. Real item data will be wired
 // up later; this just mirrors the design so the page renders identically.
@@ -123,16 +123,7 @@ function GroupShoppingList() {
 					<h3 className="text-lg font-semibold">No items yet</h3>
 				</Card>
 			)}
-			<div className="mt-auto flex justify-end pt-4">
-				<Button
-					size="icon"
-					aria-label="Add an item"
-					nativeButton={false}
-					render={<Link to={`${base}/new-item`} />}
-					className="size-14 rounded-full shadow-md">
-					<Plus aria-hidden="true" className="size-7" />
-				</Button>
-			</div>
+			<AddButton to={`${base}/new-item`} label="Add an item" />
 		</section>
 	);
 }
