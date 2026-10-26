@@ -5,6 +5,7 @@ export const groups = [
 		initial: "A",
 		name: "Apartment 4B",
 		members: ["SM", "ML", "PN", "AJ"],
+		owner: "AJ",
 		balanceLabel: "You're owed",
 		balanceAmount: "$18.50",
 		balanceStyle: "bg-emerald-100 text-emerald-800"
@@ -14,6 +15,7 @@ export const groups = [
 		initial: "W",
 		name: "Weekend Cabin Trip",
 		members: ["SM", "LK", "PN", "AJ"],
+		owner: "SM",
 		balanceLabel: "You owe",
 		balanceAmount: "$32.00",
 		balanceStyle: "bg-orange-100 text-orange-800"
@@ -23,6 +25,7 @@ export const groups = [
 		initial: "C",
 		name: "CSC Study Group",
 		members: ["SM", "LK", "UT"],
+		owner: "LK",
 		balanceLabel: "Settled up",
 		balanceAmount: null,
 		balanceStyle: "bg-muted text-muted-foreground"
