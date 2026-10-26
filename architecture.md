@@ -26,8 +26,12 @@ ESLint configuration, and Prettier configuration.
 ## Frontend — `packages/react-frontend`
 
 - Built with React, Vite, and TypeScript.
-- Currently contains the default Vite starter page (a demo counter with
-  React and Vite branding) rather than any Grocery Split functionality.
+- Contains the Grocery Split pages (groups, trips, shopping lists,
+  balances, invites and group settings), running on sample data until
+  they're connected to the API.
+- The group settings page (`/groups/:groupId/settings`) lets the user
+  rename a group or transfer ownership to another member. Saving isn't
+  wired up yet, it only shows a "not available yet" message for now.
 - Provides scripts for local development, production builds, linting, and
   formatting.
 

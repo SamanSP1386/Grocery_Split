@@ -1,5 +1,5 @@
 import { generatePath, Link, NavLink, Outlet, useParams } from "react-router";
-import { ChevronLeft, ListChecks, ShoppingCart, UserPlus, Wallet } from "lucide-react";
+import { ChevronLeft, ListChecks, Settings, ShoppingCart, UserPlus, Wallet } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarGroup } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -67,6 +67,15 @@ function GroupTabs() {
 							</DialogHeader>
 						</DialogContent>
 					</Dialog>
+					<Button
+						variant="ghost"
+						size="icon"
+						className="size-10"
+						aria-label="Group settings"
+						nativeButton={false}
+						render={<Link to={generatePath("/groups/:groupId/settings", { groupId: group.id })} />}>
+						<Settings aria-hidden="true" className="size-5" />
+					</Button>
 				</div>
 				<AvatarGroup className="justify-center" aria-label="Group members">
 					{group.members.map((member) => (

@@ -14,6 +14,7 @@ import GroupShoppingList from "./routes/GroupShoppingList";
 import EditItem from "./routes/EditItem";
 import GroupBalances from "./routes/GroupBalances";
 import GroupInvite from "./routes/GroupInvite";
+import GroupSettings from "./routes/GroupSettings";
 import AppLayout, { type PageHandle } from "./components/AppLayout";
 import GroupTabs from "./components/GroupTabs";
 import { groups } from "./data/groups";
@@ -79,6 +80,15 @@ const router = createBrowserRouter([
 						const group = groups.find((group) => group.id === groupId);
 						return group ? `in ${group.name}` : undefined;
 					}
+				} satisfies PageHandle
+			},
+			{
+				path: "/groups/:groupId/settings",
+				element: <GroupSettings />,
+				handle: {
+					title: "Group settings",
+					back: "/groups/:groupId/list",
+					subtitle: ({ groupId }) => groups.find((group) => group.id === groupId)?.name
 				} satisfies PageHandle
 			},
 			{
