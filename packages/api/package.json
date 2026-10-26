@@ -21,8 +21,8 @@
 		"create-database": "wrangler d1 execute GROCERY_SPLIT_DB --command='SELECT 1' --local"
 	},
 	"devDependencies": {
-		"@eslint/js": "^10.0.1",
 		"@grocery-split/db": "workspace:*",
+		"@grocery-split/eslint-config": "workspace:*",
 		"@grocery-split/prettier-config": "workspace:*",
 		"@grocery-split/validation": "workspace:*",
 		"@tsconfig/node-ts": "^23.6.4",
@@ -33,7 +33,6 @@
 		"lint-staged": "^17.5.1",
 		"prettier": "3.9.6",
 		"typescript": "~6.0.3",
-		"typescript-eslint": "^8.70.0",
 		"wrangler": "^4.143.0"
 	},
 	"lint-staged": {
