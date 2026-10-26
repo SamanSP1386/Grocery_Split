@@ -8,13 +8,13 @@
 		"require": null
 	},
 	"scripts": {
-		"format": "prettier --write --ignore-unknown . '!./supabase'",
+		"format": "prettier --write --ignore-unknown .",
 		"lint": "eslint .",
 		"build": "tsc",
 		"pre-commit": "lint-staged"
 	},
 	"devDependencies": {
-		"@eslint/js": "^10.0.1",
+		"@grocery-split/eslint-config": "workspace:*",
 		"@grocery-split/prettier-config": "workspace:*",
 		"@tsconfig/node-ts": "^23.6.4",
 		"@tsconfig/node26": "^26.0.1",
@@ -22,8 +22,7 @@
 		"eslint": "^10.10.0",
 		"lint-staged": "^17.5.1",
 		"prettier": "3.9.6",
-		"typescript": "~6.0.3",
-		"typescript-eslint": "^8.70.0"
+		"typescript": "~6.0.3"
 	},
 	"lint-staged": {
 		"*.*": [
