@@ -12,9 +12,14 @@ export interface PageHandle {
 	subtitle?: (params: Params<string>) => string | undefined;
 }
 
+// Deepest matched route that has a PageHandle, also used by GroupTabs
+// eslint-disable-next-line react-refresh/only-export-components
+export function usePageHandle() {
+	return useMatches().findLast((match) => match.handle) as UIMatch<unknown, PageHandle> | undefined;
+}
+
 function AppLayout() {
-	const page = useMatches().findLast((match) => match.handle) as
-		UIMatch<unknown, PageHandle> | undefined;
+	const page = usePageHandle();
 	const isForm = page?.handle.layout === "form";
 	const subtitle = page?.handle.subtitle?.(page.params);
 
