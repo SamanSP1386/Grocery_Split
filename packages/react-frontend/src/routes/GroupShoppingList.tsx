@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router";
-import { ArrowLeft, ListChecks } from "lucide-react";
+import { ListChecks } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarGroup } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -50,19 +50,7 @@ function GroupShoppingList() {
 		<section
 			aria-label={tripId ? "Trip items" : "Group shopping list"}
 			className="flex flex-1 flex-col gap-4">
-			<div className="flex items-center gap-2">
-				{tripId && (
-					<Link
-						to={`/groups/${groupId}/trips`}
-						aria-label="Back to trips"
-						className="-ml-2 flex size-10 shrink-0 items-center justify-center rounded-xl hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-						<ArrowLeft aria-hidden="true" className="size-5" />
-					</Link>
-				)}
-				<h2 className="font-heading text-lg font-semibold">
-					{tripId ? tripName : "Shopping list"}
-				</h2>
-			</div>
+			<h2 className="font-heading text-lg font-semibold">{tripId ? tripName : "Shopping list"}</h2>
 			{items.length > 0 && (
 				<div className="flex flex-wrap items-center justify-between gap-3">
 					<p className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">

@@ -10,6 +10,7 @@ import {
 	DialogTitle,
 	DialogTrigger
 } from "@/components/ui/dialog";
+import { usePageHandle } from "@/components/AppLayout";
 import { groups } from "@/data/groups";
 import { cn } from "@/lib/utils";
 
@@ -21,6 +22,7 @@ const tabs = [
 
 function GroupTabs() {
 	const params = useParams();
+	const page = usePageHandle();
 	const group = groups.find((group) => group.id === params.groupId);
 
 	if (!group) {
@@ -42,9 +44,9 @@ function GroupTabs() {
 						variant="ghost"
 						size="icon"
 						className="-ml-2 size-10"
-						aria-label="Back to My Groups"
+						aria-label="Go back"
 						nativeButton={false}
-						render={<Link to="/groups/" />}>
+						render={<Link to={generatePath(page?.handle.back ?? "/groups/", params)} />}>
 						<ChevronLeft aria-hidden="true" className="size-5" />
 					</Button>
 					<div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-secondary font-heading text-lg font-semibold">
@@ -86,29 +88,33 @@ function GroupTabs() {
 				</AvatarGroup>
 			</header>
 
-			<nav
-				aria-label="Group sections"
-				className="grid grid-cols-3 gap-1 rounded-2xl bg-secondary/60 p-1">
-				{tabs.map(({ label, path, icon: Icon }) => (
-					<NavLink
-						key={label}
-						to={generatePath(path, params)}
-						className={({ isActive }) =>
-							cn(
-								"flex min-h-11 items-center justify-center gap-2 rounded-xl px-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:min-h-12",
-								isActive
-									? "bg-card text-foreground shadow-sm"
-									: "text-muted-foreground hover:bg-card/50 hover:text-foreground"
-							)
-						}>
-						<Icon aria-hidden="true" className="hidden size-4 sm:block" />
-						{label}
-					</NavLink>
-				))}
-			</nav>
 			<div className="flex flex-1 flex-col gap-5 sm:gap-6">
 				<Outlet />
 			</div>
+
+			{/* Bottom tabs, pinned to the bottom of the screen while scrolling */}
+			<nav
+				aria-label="Group sections"
+				className="sticky bottom-0 -mx-4 -mb-4 border-t bg-background px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] sm:-mx-6 sm:-mb-6 sm:px-6 lg:-mx-8 lg:-mb-8 lg:px-8">
+				<div className="grid grid-cols-3 gap-1 rounded-2xl bg-secondary/60 p-1">
+					{tabs.map(({ label, path, icon: Icon }) => (
+						<NavLink
+							key={label}
+							to={generatePath(path, params)}
+							className={({ isActive }) =>
+								cn(
+									"flex min-h-11 items-center justify-center gap-2 rounded-xl px-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:min-h-12",
+									isActive
+										? "bg-card text-foreground shadow-sm"
+										: "text-muted-foreground hover:bg-card/50 hover:text-foreground"
+								)
+							}>
+							<Icon aria-hidden="true" className="hidden size-4 sm:block" />
+							{label}
+						</NavLink>
+					))}
+				</div>
+			</nav>
 		</main>
 	);
 }
