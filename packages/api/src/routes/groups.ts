@@ -10,6 +10,7 @@ import { and, eq } from "drizzle-orm";
 import { HTTPException } from "hono/http-exception";
 import { validateGroupParam } from "../middleware/validateParams.ts";
 import trips from "./trips.ts";
+import items from "./items.ts";
 
 const group = new Hono<AppEnv<true>>()
 	.use(enforceAuth)
@@ -103,6 +104,7 @@ const group = new Hono<AppEnv<true>>()
 		}
 	)
 	// Handle all trip requests related to this group
-	.route("/:groupId/trips", trips);
+	.route("/:groupId/trips", trips)
+	.route("/:groupId/items", items);
 
 export default group;

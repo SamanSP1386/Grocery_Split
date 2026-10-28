@@ -9,3 +9,12 @@ export const groupTripParams = z.object({
 	groupId: idValidator,
 	tripId: idValidator
 });
+
+export const groupItemParams = z.object({
+	groupId: idValidator,
+	itemId: idValidator
+});
+
+export const tripQuery = z.object({
+	tripId: idValidator.optional()
+});
