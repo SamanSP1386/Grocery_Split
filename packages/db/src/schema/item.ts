@@ -7,11 +7,11 @@ import { sql } from "drizzle-orm";
 export const item = snakeCase.table(
 	"item",
 	{
-		id: integer().primaryKey().notNull(),
-		groupId: integer()
+		id: text().primaryKey().notNull(),
+		groupId: text()
 			.notNull()
 			.references(() => group.id, { onDelete: "cascade" }),
-		tripId: integer() // CAN BE NULL if the item is not yet assigned to a trip
+		tripId: text() // CAN BE NULL if the item is not yet assigned to a trip
 			.references(() => trip.id, { onDelete: "cascade" }),
 		name: text().notNull(),
 		quantity: text(),
