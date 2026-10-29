@@ -8,6 +8,7 @@ import { HTTPException } from "hono/http-exception";
 import { validator, type Trip } from "@grocery-split/validation";
 import { zValidator } from "../middleware/zValidator.ts";
 import { nanoid } from "../lib/nanoid.ts";
+import { firstOrNotFound } from "../lib/firstOrNotFound.ts";
 
 // Is a route defined in ./groups.ts so auth is already enforced
 const trips = new Hono<AppEnv<true>>()
@@ -23,8 +24,7 @@ const trips = new Hono<AppEnv<true>>()
 		// We know the user must be a part of this group due to the enforceUserInGroup middleware
 		const res = await db.select().from(schema.trip).where(eq(schema.trip.id, c.var.tripId));
 
-		if (res.length < 1) throw new HTTPException(404, { message: "Trip Not Found" });
-		return c.json(res[0] as Trip);
+		return c.json(firstOrNotFound(res, "Trip Not Found") as Trip);
 	})
 
 	// Creating groups
@@ -57,8 +57,7 @@ const trips = new Hono<AppEnv<true>>()
 			.where(eq(schema.trip.id, c.var.tripId))
 			.returning();
 
-		if (res.length < 1) throw new HTTPException(404, { message: "Trip Not Found" });
-		return c.json(res[0] as Trip);
+		return c.json(firstOrNotFound(res, "Trip Not Found") as Trip);
 	});
 
 export default trips;

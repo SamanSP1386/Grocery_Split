@@ -11,11 +11,7 @@ import { HTTPException } from "hono/http-exception";
 import { validateGroupParam } from "../middleware/validateParams.ts";
 import trips from "./trips.ts";
 import items from "./items.ts";
-
-export function firstOrNotFound<T>(rows: T[], message: string): T {
-	if (rows.length < 1) throw new HTTPException(404, { message });
-	return rows[0];
-}
+import { firstOrNotFound } from "../lib/firstOrNotFound.ts";
 
 const group = new Hono<AppEnv<true>>()
 	.use(enforceAuth)

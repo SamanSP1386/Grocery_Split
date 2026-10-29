@@ -6,7 +6,7 @@ import { validator, type Item } from "@grocery-split/validation";
 import { eq, and, isNull } from "drizzle-orm";
 import { zValidator } from "../middleware/zValidator.ts";
 import { validateGroupAndItemParam, validateGroupParam } from "../middleware/validateParams.ts";
-import { HTTPException } from "hono/http-exception";
+import { firstOrNotFound } from "../lib/firstOrNotFound.ts";
 // Is a route defined in ./groups.ts so auth is already enforced
 const items = new Hono<AppEnv<true>>()
 	// Getting all items in the main list (if ?trip=null), or only a specific trip (?trip=id_here)
@@ -29,8 +29,7 @@ const items = new Hono<AppEnv<true>>()
 	.get("/:itemId", validateGroupAndItemParam, async (c) => {
 		const res = await db.select().from(schema.item).where(eq(schema.item.id, c.var.itemId));
 
-		if (res.length < 1) throw new HTTPException(404, { message: "Item Not Found" });
-		return c.json(res[0] as Item);
+		return c.json(firstOrNotFound(res, "Item Not Found") as Item);
 	});
 
 export default items;
