@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { validator, type Group } from "@grocery-split/validation";
+import { validator, type Group, type User } from "@grocery-split/validation";
 import { zValidator } from "../middleware/zValidator.ts";
 import type { AppEnv } from "../index.ts";
 import { enforceAuth } from "../middleware/auth.ts";
@@ -30,6 +30,22 @@ const group = new Hono<AppEnv<true>>()
 		return c.json(res as Group[]);
 	})
 
+	// List members for the item editor's split controls.
+	.get("/:groupId/members", validateGroupParam, async (c) => {
+		const res = await db
+			.select({
+				id: schema.user.id,
+				name: schema.user.name,
+				email: schema.user.email,
+				image: schema.user.image
+			})
+			.from(schema.membership)
+			.innerJoin(schema.user, eq(schema.membership.userId, schema.user.id))
+			.where(eq(schema.membership.groupId, c.var.groupId));
+
+		return c.json(res as User[]);
+	})
+
 	// Getting group by id
 	.get("/:groupId", validateGroupParam, async (c) => {
 		// We know the user must be a part of this group due to the enforceUserInGroup middleware
@@ -42,15 +58,19 @@ const group = new Hono<AppEnv<true>>()
 	.post("/", zValidator("json", validator.group), async (c) => {
 		const { user } = c.var.session;
 		const data = c.req.valid("json");
+		const groupId = nanoid();
 
-		const res = await db
-			.insert(schema.group)
-			.values({
-				...data,
-				id: nanoid(),
-				ownerId: user.id
-			})
-			.returning();
+		const [res] = await db.batch([
+			db
+				.insert(schema.group)
+				.values({
+					...data,
+					id: groupId,
+					ownerId: user.id
+				})
+				.returning(),
+			db.insert(schema.membership).values({ groupId, userId: user.id })
+		]);
 
 		return c.json(firstOrNotFound(res, "Group Not Found") as Group);
 	})
@@ -100,6 +120,19 @@ const group = new Hono<AppEnv<true>>()
 			return c.json(firstOrNotFound(res, "Group Not Found") as Group);
 		}
 	)
+
+	// Delete a group. Only its current owner may do this.
+	.delete("/:groupId", validateGroupParam, async (c) => {
+		const { user } = c.var.session;
+
+		const res = await db
+			.delete(schema.group)
+			.where(and(eq(schema.group.id, c.var.groupId), eq(schema.group.ownerId, user.id)))
+			.returning();
+
+		return c.json(firstOrNotFound(res, "Group Not Found") as Group);
+	})
+
 	// Handle all trip requests related to this group
 	.route("/:groupId/trips", trips)
 	.route("/:groupId/items", items);

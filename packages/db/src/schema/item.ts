@@ -35,7 +35,7 @@ export const wantedItem = snakeCase.table(
 	{
 		itemId: text()
 			.notNull()
-			.references(() => group.id, { onDelete: "cascade" }),
+			.references(() => item.id, { onDelete: "cascade" }),
 		userId: text()
 			.notNull()
 			.references(() => user.id, { onDelete: "cascade" }),

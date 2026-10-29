@@ -58,6 +58,16 @@ const trips = new Hono<AppEnv<true>>()
 			.returning();
 
 		return c.json(firstOrNotFound(res, "Trip Not Found") as Trip);
+	})
+
+	// Unassign items before deleting the trip so they remain on the main shopping list.
+	.delete("/:tripId", validateGroupAndTripParam, async (c) => {
+		await db.batch([
+			db.update(schema.item).set({ tripId: null }).where(eq(schema.item.tripId, c.var.tripId)),
+			db.delete(schema.trip).where(eq(schema.trip.id, c.var.tripId))
+		]);
+
+		return c.body(null, 204);
 	});
 
 export default trips;
