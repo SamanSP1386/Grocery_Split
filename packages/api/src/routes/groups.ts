@@ -12,6 +12,11 @@ import { validateGroupParam } from "../middleware/validateParams.ts";
 import trips from "./trips.ts";
 import items from "./items.ts";
 
+export function firstOrNotFound<T>(rows: T[], message: string): T {
+	if (rows.length < 1) throw new HTTPException(404, { message });
+	return rows[0];
+}
+
 const group = new Hono<AppEnv<true>>()
 	.use(enforceAuth)
 
@@ -34,8 +39,7 @@ const group = new Hono<AppEnv<true>>()
 		// We know the user must be a part of this group due to the enforceUserInGroup middleware
 		const res = await db.select().from(schema.group).where(eq(schema.group.id, c.var.groupId));
 
-		if (res.length < 1) throw new HTTPException(404, { message: "Group Not Found" });
-		return c.json(res[0] as Group);
+		return c.json(firstOrNotFound(res, "Group Not Found") as Group);
 	})
 
 	// Creating groups
@@ -52,8 +56,7 @@ const group = new Hono<AppEnv<true>>()
 			})
 			.returning();
 
-		if (res.length < 1) throw new HTTPException(404, { message: "Group Not Found" });
-		return c.json(res[0] as Group);
+		return c.json(firstOrNotFound(res, "Group Not Found") as Group);
 	})
 
 	// Updating group
@@ -67,8 +70,7 @@ const group = new Hono<AppEnv<true>>()
 			.where(eq(schema.group.id, c.var.groupId))
 			.returning();
 
-		if (res.length < 1) throw new HTTPException(404, { message: "Group Not Found" });
-		return c.json(res[0] as Group);
+		return c.json(firstOrNotFound(res, "Group Not Found") as Group);
 	})
 
 	// Updating group owner (can only be done by the existing group owner)
@@ -99,8 +101,7 @@ const group = new Hono<AppEnv<true>>()
 				.where(and(eq(schema.group.id, c.var.groupId), eq(schema.group.ownerId, user.id))) // Make sure the current ownerId matches the user making the request
 				.returning();
 
-			if (res.length < 1) throw new HTTPException(404, { message: "Group Not Found" });
-			return c.json(res[0] as Group);
+			return c.json(firstOrNotFound(res, "Group Not Found") as Group);
 		}
 	)
 	// Handle all trip requests related to this group
