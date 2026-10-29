@@ -2,7 +2,6 @@
 export const groups = [
 	{
 		id: "apartment-4b",
-		initial: "A",
 		name: "Apartment 4B",
 		members: ["SM", "ML", "PN", "AJ"],
 		owner: "AJ",
@@ -12,7 +11,6 @@ export const groups = [
 	},
 	{
 		id: "weekend-cabin",
-		initial: "W",
 		name: "Weekend Cabin Trip",
 		members: ["SM", "LK", "PN", "AJ"],
 		owner: "SM",
@@ -22,7 +20,6 @@ export const groups = [
 	},
 	{
 		id: "csc-study-group",
-		initial: "C",
 		name: "CSC Study Group",
 		members: ["SM", "LK", "UT"],
 		owner: "LK",

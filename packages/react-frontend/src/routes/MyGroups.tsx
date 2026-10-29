@@ -24,7 +24,7 @@ function MyGroups() {
 						<Card className="h-full flex-row items-stretch gap-0 rounded-2xl p-0 shadow-sm transition-colors hover:bg-muted/30">
 							<div className="flex min-w-0 flex-1 items-center gap-2 p-3 sm:gap-3 sm:p-4">
 								<div className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-muted font-heading font-semibold text-muted-foreground sm:size-10">
-									{group.initial}
+									{group.name[0]}
 								</div>
 								<div className="min-w-0 flex-1">
 									<h2 className="truncate text-sm font-semibold sm:text-base" title={group.name}>
