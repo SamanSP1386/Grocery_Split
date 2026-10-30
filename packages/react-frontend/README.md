@@ -40,6 +40,7 @@ pnpm format    # run prettier
   as data (see `src/main.tsx`) rather than as JSX, which lets us hook up loaders/actions per route
   later on.
 - **Hono RPC**, typed api client, importing the `@grocery-split/api` router type
+- **TanStack Query** for fetching and caching api data — shared queries live in `src/lib/queries.ts`
 - **shadcn/ui** for components, built on top of **Tailwind CSS**. Components live in
   `src/components/ui` and are meant to be copied/edited directly rather than installed as a
   black-box package — use the shadcn CLI to add new ones.

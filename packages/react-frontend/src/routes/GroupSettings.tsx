@@ -1,25 +1,52 @@
 import { useId, useState, type FormEvent } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { parseResponse } from "hono/client";
 import { useParams } from "react-router";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { groups } from "@/data/groups";
-import { cn } from "@/lib/utils";
+import { authClient, client } from "@/lib/client";
+import { errorMessage, groupQuery, groupsQuery, membersQuery } from "@/lib/queries";
+import { cn, initials } from "@/lib/utils";
 
-function GroupSettings() {
-	const { groupId } = useParams();
-	const group = groups.find((group) => group.id === groupId);
+interface GroupSettingsFormProps {
+	group: { id: string; name: string; ownerId: string };
+	members: { id: string; name: string }[];
+}
+
+function GroupSettingsForm({ group, members }: GroupSettingsFormProps) {
+	const { data: session } = authClient.useSession();
+	const queryClient = useQueryClient();
 	const nameId = useId();
-	const [name, setName] = useState(group?.name ?? "");
+	const [name, setName] = useState(group.name);
 	const [nameError, setNameError] = useState("");
 	const [nameStatus, setNameStatus] = useState("");
-	const [newOwner, setNewOwner] = useState(group?.owner ?? "");
+	const [newOwner, setNewOwner] = useState(group.ownerId);
 	const [ownerStatus, setOwnerStatus] = useState("");
+	const param = { groupId: group.id };
+	const isOwner = session?.user.id === group.ownerId;
 
-	if (!group) {
-		return <p className="text-sm text-muted-foreground">This group couldn't be found.</p>;
-	}
+	const rename = useMutation({
+		mutationFn: (name: string) =>
+			parseResponse(client.api.groups[":groupId"].$patch({ param, json: { name } })),
+		onSuccess: () => {
+			setNameStatus("Group name saved.");
+			// The name also shows in the groups list, so refresh from the top
+			void queryClient.invalidateQueries({ queryKey: groupsQuery.queryKey });
+		},
+		onError: (error) => setNameError(errorMessage(error))
+	});
+
+	const transfer = useMutation({
+		mutationFn: (ownerId: string) =>
+			parseResponse(client.api.groups[":groupId"].owner.$patch({ param, json: { ownerId } })),
+		onSuccess: () => {
+			setOwnerStatus("Ownership transferred.");
+			void queryClient.invalidateQueries({ queryKey: groupQuery(group.id).queryKey });
+		},
+		onError: (error) => setOwnerStatus(errorMessage(error))
+	});
 
 	function handleRename(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
@@ -27,14 +54,12 @@ function GroupSettings() {
 			setNameError("Enter a name to continue.");
 			return;
 		}
-		// Connect renaming here once the frontend has an authenticated API client.
-		setNameStatus("Renaming groups isn't available yet.");
+		rename.mutate(name.trim());
 	}
 
 	function handleTransfer(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
-		// Connect ownership transfer here once the frontend has an authenticated API client.
-		setOwnerStatus("Transferring ownership isn't available yet.");
+		transfer.mutate(newOwner);
 	}
 
 	return (
@@ -72,7 +97,7 @@ function GroupSettings() {
 					)}
 					<Button
 						type="submit"
-						disabled={name.trim() === group.name}
+						disabled={name.trim() === group.name || rename.isPending}
 						className="h-11 w-full rounded-xl font-semibold">
 						Save name
 					</Button>
@@ -81,35 +106,40 @@ function GroupSettings() {
 
 			<Card className="gap-0 rounded-2xl p-4 shadow-sm sm:p-5">
 				<form onSubmit={handleTransfer} className="flex flex-col gap-3">
-					<fieldset className="flex flex-col gap-3">
+					<fieldset disabled={!isOwner} className="flex flex-col gap-3">
 						<legend className="mb-1 font-heading text-base font-semibold">Group owner</legend>
 						<p className="text-sm text-muted-foreground">
-							Pick a member to hand ownership of this group to.
+							{isOwner
+								? "Pick a member to hand ownership of this group to."
+								: "Only the current owner can hand this group to someone else."}
 						</p>
 						<div className="flex flex-col gap-2">
-							{group.members.map((member) => (
+							{members.map((member) => (
 								<label
-									key={member}
+									key={member.id}
 									className={cn(
-										"flex min-h-12 cursor-pointer items-center gap-3 rounded-xl border px-3 py-2 transition-colors has-focus-visible:ring-2 has-focus-visible:ring-ring",
-										newOwner === member ? "border-primary bg-primary/5" : "hover:bg-muted/30"
+										"flex min-h-12 items-center gap-3 rounded-xl border px-3 py-2 transition-colors has-focus-visible:ring-2 has-focus-visible:ring-ring",
+										isOwner && "cursor-pointer",
+										newOwner === member.id
+											? "border-primary bg-primary/5"
+											: isOwner && "hover:bg-muted/30"
 									)}>
 									<input
 										type="radio"
 										name="owner"
-										value={member}
-										checked={newOwner === member}
+										value={member.id}
+										checked={newOwner === member.id}
 										onChange={() => {
-											setNewOwner(member);
+											setNewOwner(member.id);
 											setOwnerStatus("");
 										}}
 										className="sr-only"
 									/>
 									<Avatar size="sm">
-										<AvatarFallback>{member}</AvatarFallback>
+										<AvatarFallback>{initials(member.name)}</AvatarFallback>
 									</Avatar>
-									<span className="flex-1 text-sm font-medium">{member}</span>
-									{member === group.owner && (
+									<span className="flex-1 text-sm font-medium">{member.name}</span>
+									{member.id === group.ownerId && (
 										<span className="text-xs text-muted-foreground">Current owner</span>
 									)}
 								</label>
@@ -124,7 +154,7 @@ function GroupSettings() {
 					<Button
 						type="submit"
 						variant="outline"
-						disabled={newOwner === group.owner}
+						disabled={!isOwner || newOwner === group.ownerId || transfer.isPending}
 						className="h-11 w-full rounded-xl font-semibold">
 						Transfer ownership
 					</Button>
@@ -132,6 +162,21 @@ function GroupSettings() {
 			</Card>
 		</div>
 	);
+}
+
+function GroupSettings() {
+	const { groupId = "" } = useParams();
+	const group = useQuery(groupQuery(groupId));
+	const members = useQuery(membersQuery(groupId));
+
+	if (group.isError || members.isError) {
+		return <p className="text-sm text-muted-foreground">This group couldn't be found.</p>;
+	}
+	if (group.isPending || members.isPending) {
+		return <p className="text-sm text-muted-foreground">Loading group…</p>;
+	}
+
+	return <GroupSettingsForm key={group.data.id} group={group.data} members={members.data} />;
 }
 
 export default GroupSettings;

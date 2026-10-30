@@ -17,8 +17,8 @@ import GroupInvite from "./routes/GroupInvite";
 import GroupSettings from "./routes/GroupSettings";
 import AppLayout, { type PageHandle } from "./components/AppLayout";
 import GroupTabs from "./components/GroupTabs";
-import { groups } from "./data/groups";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { DetailedError } from "hono/client";
 
 // https://reactrouter.com/start/data/routing
 const router = createBrowserRouter([
@@ -77,10 +77,7 @@ const router = createBrowserRouter([
 					title: "New trip",
 					back: "/groups/:groupId/trips",
 					layout: "form",
-					subtitle: ({ groupId }) => {
-						const group = groups.find((group) => group.id === groupId);
-						return group ? `in ${group.name}` : undefined;
-					}
+					subtitle: ({ name }) => `in ${name}`
 				} satisfies PageHandle
 			},
 			{
@@ -89,7 +86,7 @@ const router = createBrowserRouter([
 				handle: {
 					title: "Group settings",
 					back: "/groups/:groupId/list",
-					subtitle: ({ groupId }) => groups.find((group) => group.id === groupId)?.name
+					subtitle: ({ name }) => name
 				} satisfies PageHandle
 			},
 			{
@@ -132,7 +129,22 @@ const router = createBrowserRouter([
 	}
 ]);
 
-const queryClient = new QueryClient();
+// Send people back to sign in when their session is missing or has expired
+function redirectIfSignedOut(error: Error) {
+	if (error instanceof DetailedError && error.statusCode === 401) void router.navigate("/");
+}
+
+const queryClient = new QueryClient({
+	queryCache: new QueryCache({ onError: redirectIfSignedOut }),
+	mutationCache: new MutationCache({ onError: redirectIfSignedOut }),
+	defaultOptions: {
+		queries: {
+			// Retrying won't fix a 4xx (not found, signed out, ...)
+			retry: (failureCount, error) =>
+				!(error instanceof DetailedError && (error.statusCode ?? 500) < 500) && failureCount < 3
+		}
+	}
+});
 
 createRoot(document.getElementById("root")!).render(
 	<QueryClientProvider client={queryClient}>
