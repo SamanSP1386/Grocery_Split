@@ -15,8 +15,16 @@ export interface Item {
 	createdById: User["id"];
 }
 
+export interface PopulatedItem extends Item {
+	wantedBy: PopulatedWantedItem[];
+}
+
 export interface WantedItem {
 	itemId: Item["id"];
 	userId: User["id"];
 	parts: number;
+}
+
+export interface PopulatedWantedItem extends WantedItem {
+	user: User;
 }
