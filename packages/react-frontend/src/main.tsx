@@ -18,6 +18,7 @@ import GroupSettings from "./routes/GroupSettings";
 import AppLayout, { type PageHandle } from "./components/AppLayout";
 import GroupTabs from "./components/GroupTabs";
 import { groups } from "./data/groups";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // https://reactrouter.com/start/data/routing
 const router = createBrowserRouter([
@@ -131,10 +132,14 @@ const router = createBrowserRouter([
 	}
 ]);
 
+const queryClient = new QueryClient();
+
 createRoot(document.getElementById("root")!).render(
-	<StrictMode>
-		<RouterProvider router={router} />
-	</StrictMode>
+	<QueryClientProvider client={queryClient}>
+		<StrictMode>
+			<RouterProvider router={router} />
+		</StrictMode>
+	</QueryClientProvider>
 );
 
 // prompts for a refresh
