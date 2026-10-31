@@ -2,23 +2,18 @@ import { useId, useState, type FormEvent } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { parseResponse } from "hono/client";
 import { useNavigate, useParams } from "react-router";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { UserAvatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { client } from "@/lib/client";
 import { errorMessage, itemQuery, itemSharesQuery, membersQuery } from "@/lib/queries";
-import { cn, formatPrice, initials } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
+import type { Item, User } from "@grocery-split/validation";
 
 interface ItemFormProps {
-	members: { id: string; name: string }[];
+	members: User[];
 	// Only set when editing an existing item
-	item?: {
-		id: string;
-		name: string;
-		quantity: string | null;
-		notes: string | null;
-		price: number | null;
-	};
+	item?: Item;
 	shares?: { userId: string; parts: number }[];
 }
 
@@ -215,9 +210,7 @@ function ItemForm({ members, item, shares }: ItemFormProps) {
 											aria-label={`Split with ${member.name}`}
 											className="size-5 shrink-0 accent-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
 										/>
-										<Avatar size="sm">
-											<AvatarFallback>{initials(member.name)}</AvatarFallback>
-										</Avatar>
+										<UserAvatar user={member} size="sm" />
 										<span className="truncate text-sm font-medium" title={member.name}>
 											{member.name}
 										</span>

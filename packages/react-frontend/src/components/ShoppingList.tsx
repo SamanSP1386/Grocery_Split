@@ -1,7 +1,7 @@
 import type { PopulatedItem } from "@grocery-split/validation";
 import { Link } from "react-router";
 import { Card } from "./ui/card";
-import { Avatar, AvatarFallback, AvatarGroup } from "./ui/avatar";
+import { AvatarGroup, UserAvatar } from "./ui/avatar";
 
 function ShoppingList({ base, items }: { base: string; items: PopulatedItem[] }) {
 	return (
@@ -23,9 +23,7 @@ function ShoppingList({ base, items }: { base: string; items: PopulatedItem[] })
 									)}
 									<AvatarGroup aria-label="Sharing this item">
 										{item.wantedBy.map((wantedItem) => (
-											<Avatar key={wantedItem.userId} size="sm">
-												<AvatarFallback>{wantedItem.user.name}</AvatarFallback>
-											</Avatar>
+											<UserAvatar key={wantedItem.userId} user={wantedItem.user} size="sm" />
 										))}
 									</AvatarGroup>
 								</div>

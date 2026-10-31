@@ -2,13 +2,13 @@ import { useId, useState, type FormEvent } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { parseResponse } from "hono/client";
 import { useParams } from "react-router";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { UserAvatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { authClient, client } from "@/lib/client";
 import { errorMessage, groupQuery, groupsQuery, membersQuery } from "@/lib/queries";
-import { cn, initials } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import type { Group, User } from "@grocery-split/validation";
 
 interface GroupSettingsFormProps {
@@ -136,9 +136,7 @@ function GroupSettingsForm({ group, members }: GroupSettingsFormProps) {
 										}}
 										className="sr-only"
 									/>
-									<Avatar size="sm">
-										<AvatarFallback>{initials(member.name)}</AvatarFallback>
-									</Avatar>
+									<UserAvatar user={member} size="sm" />
 									<span className="flex-1 text-sm font-medium">{member.name}</span>
 									{member.id === group.ownerId && (
 										<span className="text-xs text-muted-foreground">Current owner</span>
