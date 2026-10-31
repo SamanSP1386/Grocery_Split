@@ -23,7 +23,7 @@ function GroupShoppingList() {
 			{!items.isLoading ? (
 				items.isSuccess ? (
 					items.data.length ? (
-						<ShoppingList base={base} items={items.data} />
+						<ShoppingList base={base} items={items.data} showPrice={tripId !== undefined} />
 					) : (
 						<Card className="items-center gap-3 rounded-2xl px-6 py-12 text-center shadow-sm">
 							<ListChecks aria-hidden="true" className="size-8 text-primary" />

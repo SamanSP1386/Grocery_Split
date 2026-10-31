@@ -1,38 +1,62 @@
 import type { PopulatedItem } from "@grocery-split/validation";
 import { Link } from "react-router";
-import { Card } from "./ui/card";
 import { AvatarGroup, UserAvatar } from "./ui/avatar";
+import { formatPrice } from "@/lib/utils";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
+import { Edit2 } from "lucide-react";
+import { Button } from "./ui/button";
 
-function ShoppingList({ base, items }: { base: string; items: PopulatedItem[] }) {
+function ShoppingList({
+	base,
+	items,
+	showPrice = true
+}: {
+	base: string;
+	items: PopulatedItem[];
+	showPrice?: boolean;
+}) {
 	return (
-		<ul className="grid grid-cols-1 gap-3 sm:gap-4">
-			{items.map((item) => (
-				<li key={item.id} className="min-w-0">
-					<Link
-						to={`${base}/items/${item.id}/edit`}
-						aria-label={`Edit ${item.name}`}
-						className="block rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-						<Card className="flex-row items-stretch gap-0 rounded-2xl p-0 shadow-sm transition-colors hover:bg-muted/30">
-							<div className="min-w-0 flex-1 p-4 sm:p-5">
-								<h3 className="truncate text-base font-semibold" title={item.name}>
-									{item.name}
-								</h3>
-								<div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2">
-									{item.quantity && (
-										<span className="text-sm text-muted-foreground">{item.quantity}</span>
-									)}
-									<AvatarGroup aria-label="Sharing this item">
-										{item.wantedBy.map((wantedItem) => (
-											<UserAvatar key={wantedItem.userId} user={wantedItem.user} size="sm" />
-										))}
-									</AvatarGroup>
-								</div>
-							</div>
-						</Card>
-					</Link>
-				</li>
-			))}
-		</ul>
+		<Table>
+			<TableHeader>
+				<TableRow className="text-sm">
+					<TableHead className="w-full">Name</TableHead>
+					<TableHead>Quantity</TableHead>
+					{showPrice && <TableHead className="text-right">Price</TableHead>}
+					<TableHead>Members</TableHead>
+					<TableHead>Edit</TableHead>
+				</TableRow>
+			</TableHeader>
+			<TableBody>
+				{items.map((item) => (
+					<TableRow>
+						<TableCell className="w-full truncate text-base font-semibold">{item.name}</TableCell>
+						<TableCell className="truncate">{item.quantity}</TableCell>
+						{showPrice && (
+							<TableCell className="truncate">
+								{item.price ? formatPrice(item.price) : "-"}
+							</TableCell>
+						)}
+						<TableCell>
+							<AvatarGroup aria-label="Sharing this item" className="flex-1">
+								{item.wantedBy.map((wantedItem) => (
+									<UserAvatar key={wantedItem.userId} user={wantedItem.user} size="sm" />
+								))}
+							</AvatarGroup>
+						</TableCell>
+						<TableCell>
+							<Button
+								variant="ghost"
+								size="icon"
+								aria-label={`Edit ${item.name}`}
+								nativeButton={false}
+								render={<Link to={`${base}/items/${item.id}/edit`} />}>
+								<Edit2 className="size-5" />
+							</Button>
+						</TableCell>
+					</TableRow>
+				))}
+			</TableBody>
+		</Table>
 	);
 }
 
