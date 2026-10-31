@@ -1,4 +1,5 @@
 import { generatePath, Link, NavLink, Outlet, useParams } from "react-router";
+import { useQuery } from "@tanstack/react-query";
 import { ChevronLeft, ListChecks, Settings, ShoppingCart, UserPlus, Wallet } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarGroup } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -11,8 +12,8 @@ import {
 	DialogTrigger
 } from "@/components/ui/dialog";
 import { usePageHandle } from "@/components/AppLayout";
-import { groups } from "@/data/groups";
-import { cn } from "@/lib/utils";
+import { groupQuery, membersQuery } from "@/lib/queries";
+import { cn, initials } from "@/lib/utils";
 
 const tabs = [
 	{ label: "Trips", path: "/groups/:groupId/trips", icon: ShoppingCart },
@@ -23,7 +24,17 @@ const tabs = [
 function GroupTabs() {
 	const params = useParams();
 	const page = usePageHandle();
-	const group = groups.find((group) => group.id === params.groupId);
+	const groupId = params.groupId ?? "";
+	const { data: group, isPending } = useQuery(groupQuery(groupId));
+	const { data: members } = useQuery(membersQuery(groupId));
+
+	if (isPending) {
+		return (
+			<main className="mx-auto flex min-h-dvh w-full max-w-6xl flex-col gap-4 p-4 sm:p-6 lg:p-8">
+				<p className="text-sm text-muted-foreground">Loading group…</p>
+			</main>
+		);
+	}
 
 	if (!group) {
 		return (
@@ -50,7 +61,7 @@ function GroupTabs() {
 						<ChevronLeft aria-hidden="true" className="size-5" />
 					</Button>
 					<div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-secondary font-heading text-lg font-semibold">
-						{group.initial}
+						{group.name[0]}
 					</div>
 					<h1 className="min-w-0 flex-1 font-heading text-xl font-bold break-words sm:text-2xl">
 						{group.name}
@@ -80,9 +91,9 @@ function GroupTabs() {
 					</Button>
 				</div>
 				<AvatarGroup className="justify-center" aria-label="Group members">
-					{group.members.map((member) => (
-						<Avatar key={member} size="sm">
-							<AvatarFallback>{member}</AvatarFallback>
+					{members?.map((member) => (
+						<Avatar key={member.id} size="sm" title={member.name}>
+							<AvatarFallback>{initials(member.name)}</AvatarFallback>
 						</Avatar>
 					))}
 				</AvatarGroup>

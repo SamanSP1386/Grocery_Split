@@ -6,19 +6,23 @@ interface CreateNameFormProps {
 	label: string;
 	placeholder: string;
 	description: string;
-	unavailableMessage: string;
+	onCreate: (name: string) => void;
+	isPending: boolean;
+	// Message from the last failed create, if any
+	createError?: string;
 }
 
 function CreateNameForm({
 	label,
 	placeholder,
 	description,
-	unavailableMessage
+	onCreate,
+	isPending,
+	createError
 }: CreateNameFormProps) {
 	const inputId = useId();
 	const [name, setName] = useState("");
 	const [error, setError] = useState("");
-	const [status, setStatus] = useState("");
 
 	function handleSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
@@ -26,8 +30,7 @@ function CreateNameForm({
 			setError("Enter a name to continue.");
 			return;
 		}
-		// Connect creation here once the frontend has an authenticated API client.
-		setStatus(unavailableMessage);
+		onCreate(name.trim());
 	}
 
 	return (
@@ -44,7 +47,6 @@ function CreateNameForm({
 						onChange={(event) => {
 							setName(event.target.value);
 							setError("");
-							setStatus("");
 						}}
 						placeholder={placeholder}
 						required
@@ -66,13 +68,16 @@ function CreateNameForm({
 			</div>
 			<footer className="shrink-0 border-t p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:p-6 lg:p-8">
 				<div className="mx-auto w-full max-w-xl">
-					{status && (
-						<p role="status" className="mb-3 text-center text-sm text-muted-foreground">
-							{status}
+					{createError && (
+						<p role="alert" className="mb-3 text-center text-sm text-destructive">
+							{createError}
 						</p>
 					)}
-					<Button type="submit" className="h-14 w-full rounded-2xl text-base font-semibold">
-						Create
+					<Button
+						type="submit"
+						disabled={isPending}
+						className="h-14 w-full rounded-2xl text-base font-semibold">
+						{isPending ? "Creating…" : "Create"}
 					</Button>
 				</div>
 			</footer>

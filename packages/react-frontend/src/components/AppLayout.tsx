@@ -1,6 +1,8 @@
-import { generatePath, Link, Outlet, useMatches, type Params, type UIMatch } from "react-router";
+import { generatePath, Link, Outlet, useMatches, type UIMatch } from "react-router";
+import { useQuery } from "@tanstack/react-query";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { groupQuery } from "@/lib/queries";
 import { cn } from "@/lib/utils";
 
 // Set as a route's `handle` in main.tsx to configure the header for that page
@@ -9,7 +11,8 @@ export interface PageHandle {
 	// Route pattern the back button links to, e.g. "/groups/:groupId/trips"
 	back: string;
 	layout?: "form";
-	subtitle?: (params: Params<string>) => string | undefined;
+	// Built from the group in the URL, shown once it has loaded
+	subtitle?: (group: { name: string }) => string;
 }
 
 // Deepest matched route that has a PageHandle, also used by GroupTabs
@@ -21,7 +24,12 @@ export function usePageHandle() {
 function AppLayout() {
 	const page = usePageHandle();
 	const isForm = page?.handle.layout === "form";
-	const subtitle = page?.handle.subtitle?.(page.params);
+	const groupId = page?.params.groupId;
+	const { data: group } = useQuery({
+		...groupQuery(groupId ?? ""),
+		enabled: Boolean(groupId && page?.handle.subtitle)
+	});
+	const subtitle = group && page?.handle.subtitle?.(group);
 
 	return (
 		<main
