@@ -8,7 +8,7 @@ import {
 	type PopulatedItem,
 	type WantedItem
 } from "@grocery-split/validation";
-import { eq, and, isNull } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { zValidator } from "../middleware/zValidator.ts";
 import { validateGroupAndItemParam, validateGroupParam } from "../middleware/validateParams.ts";
 import { firstOrNotFound } from "../lib/firstOrNotFound.ts";
@@ -55,10 +55,8 @@ const items = new Hono<AppEnv<true>>()
 				}
 			},
 			where: {
-				RAW: and(
-					eq(schema.item.groupId, c.var.groupId),
-					tripId !== undefined ? eq(schema.item.tripId, tripId) : isNull(schema.item.tripId)
-				)
+				groupId: c.var.groupId,
+				tripId: tripId !== undefined ? tripId : { isNull: true }
 			}
 		});
 

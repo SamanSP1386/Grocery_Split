@@ -1,7 +1,7 @@
 // Shared sample groups until the frontend is connected to the groups API.
 export const groups = [
 	{
-		id: "apartment-4b",
+		id: "testtesttesttest",
 		name: "Apartment 4B",
 		members: ["SM", "ML", "PN", "AJ"],
 		owner: "AJ",

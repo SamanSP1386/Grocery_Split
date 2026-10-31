@@ -9,12 +9,12 @@ export const user = snakeCase.table("user", {
 	email: text("email").notNull().unique(),
 	emailVerified: integer("email_verified", { mode: "boolean" }).default(false).notNull(),
 	image: text("image"),
-	createdAt: integer("created_at", { mode: "timestamp_ms" })
+	createdAt: integer("created_at")
 		.default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
 		.notNull(),
-	updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+	updatedAt: integer("updated_at")
 		.default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
-		.$onUpdate(() => /* @__PURE__ */ new Date())
+		.$onUpdate(() => sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
 		.notNull()
 });
 
@@ -22,13 +22,13 @@ export const session = snakeCase.table(
 	"session",
 	{
 		id: text("id").primaryKey(),
-		expiresAt: integer("expires_at", { mode: "timestamp_ms" }).notNull(),
+		expiresAt: integer("expires_at").notNull(),
 		token: text("token").notNull().unique(),
-		createdAt: integer("created_at", { mode: "timestamp_ms" })
+		createdAt: integer("created_at")
 			.default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
 			.notNull(),
-		updatedAt: integer("updated_at", { mode: "timestamp_ms" })
-			.$onUpdate(() => /* @__PURE__ */ new Date())
+		updatedAt: integer("updated_at")
+			.$onUpdate(() => sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
 			.notNull(),
 		ipAddress: text("ip_address"),
 		userAgent: text("user_agent"),
@@ -59,11 +59,11 @@ export const account = snakeCase.table(
 		}),
 		scope: text("scope"),
 		password: text("password"),
-		createdAt: integer("created_at", { mode: "timestamp_ms" })
+		createdAt: integer("created_at")
 			.default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
 			.notNull(),
-		updatedAt: integer("updated_at", { mode: "timestamp_ms" })
-			.$onUpdate(() => /* @__PURE__ */ new Date())
+		updatedAt: integer("updated_at")
+			.$onUpdate(() => sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
 			.notNull()
 	},
 	(table) => [index("account_userId_idx").on(table.userId)]
@@ -75,13 +75,13 @@ export const verification = snakeCase.table(
 		id: text("id").primaryKey(),
 		identifier: text("identifier").notNull(),
 		value: text("value").notNull(),
-		expiresAt: integer("expires_at", { mode: "timestamp_ms" }).notNull(),
-		createdAt: integer("created_at", { mode: "timestamp_ms" })
+		expiresAt: integer("expires_at").notNull(),
+		createdAt: integer("created_at")
 			.default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
 			.notNull(),
-		updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+		updatedAt: integer("updated_at")
 			.default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
-			.$onUpdate(() => /* @__PURE__ */ new Date())
+			.$onUpdate(() => sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
 			.notNull()
 	},
 	(table) => [index("verification_identifier_idx").on(table.identifier)]

@@ -11,7 +11,7 @@ export interface Item {
 	quantity: string | null;
 	notes: string | null;
 	price: number | null;
-	createdAt: Date;
+	createdAt: number;
 	createdById: User["id"];
 }
 

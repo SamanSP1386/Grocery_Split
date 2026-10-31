@@ -1,5 +1,5 @@
 import { useParams } from "react-router";
-import { CircleX, ListChecks } from "lucide-react";
+import { CircleX, ListChecks, Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import AddButton from "@/components/AddButton";
 import { useQuery } from "@tanstack/react-query";
@@ -13,17 +13,19 @@ function GroupShoppingList() {
 
 	const getTrip = useCallback(
 		() =>
-			tripId
-				? client.api.groups[":groupId"].trips[":tripId"]
-						.$get({
-							param: { groupId: groupId!, tripId }
-						})
-						.then((res) => res.json())
-				: undefined,
+			client.api.groups[":groupId"].trips[":tripId"]
+				.$get({
+					param: { groupId: groupId!, tripId: tripId! }
+				})
+				.then((res) => res.json()),
 		[groupId, tripId]
 	);
 
-	const tripQuery = useQuery({ queryKey: [groupId, "trip", tripId], queryFn: getTrip });
+	const tripQuery = useQuery({
+		queryKey: [groupId, "trip", tripId],
+		queryFn: getTrip,
+		enabled: tripId != undefined
+	});
 
 	const getItems = useCallback(
 		() =>
@@ -45,19 +47,28 @@ function GroupShoppingList() {
 			<h2 className="font-heading text-lg font-semibold">
 				{tripId && tripQuery.isSuccess ? tripQuery.data!.name : "Shopping list"}
 			</h2>
-			{itemsQuery.isSuccess ? (
-				itemsQuery.data.length ? (
-					<ShoppingList items={itemsQuery.data} />
+			{!itemsQuery.isLoading ? (
+				itemsQuery.isSuccess ? (
+					itemsQuery.data.length ? (
+						<ShoppingList base={base} items={itemsQuery.data} />
+					) : (
+						<Card className="items-center gap-3 rounded-2xl px-6 py-12 text-center shadow-sm">
+							<ListChecks aria-hidden="true" className="size-8 text-primary" />
+							<h3 className="text-lg font-semibold">No items yet</h3>
+						</Card>
+					)
 				) : (
 					<Card className="items-center gap-3 rounded-2xl px-6 py-12 text-center shadow-sm">
-						<ListChecks aria-hidden="true" className="size-8 text-primary" />
-						<h3 className="text-lg font-semibold">No items yet</h3>
+						<CircleX aria-hidden="true" className="size-8 text-primary" />
+						<h3 className="text-lg font-semibold">
+							Error fetching data: {itemsQuery.error?.message || "Unknown Error"}
+						</h3>
 					</Card>
 				)
 			) : (
 				<Card className="items-center gap-3 rounded-2xl px-6 py-12 text-center shadow-sm">
-					<CircleX aria-hidden="true" className="size-8 text-primary" />
-					<h3 className="text-lg font-semibold">Error fetching data</h3>
+					<Loader2 aria-hidden="true" className="size-8 text-primary" />
+					<h3 className="text-lg font-semibold">Loading...</h3>
 				</Card>
 			)}
 			<AddButton to={`${base}/new-item`} label="Add an item" />
